@@ -31,13 +31,16 @@ const PanVerification = () => {
     onSubmit: async (values) => {
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_APP_BACKEND_URL}/api/v1/ekyc-verification`,
+          `${import.meta.env.VITE_APP_BACKEND_URL}/ekyc-verification`,
           {
             id: values.pan,
             type: "PID",
           },
           {
-            headers: `Bearer ${import.meta.env.MY_API_KEY}`, // Replace with actual token
+            headers: {
+              Authorization: `Bearer ${import.meta.env.VITE_MY_API_KEY}`,
+              "Content-Type": "application/json",
+            },
           }
         );
 

@@ -34,14 +34,15 @@ const ItrVerification = () => {
     onSubmit: async (values) => {
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_APP_BACKEND_URL}/api/v1/ekyc-verification`,
+          `${import.meta.env.VITE_APP_BACKEND_URL}/ekyc-verification`,
           {
             type: "ITR",
             id: values.itrId,
           },
           {
             headers: {
-              Authorization: `Bearer ${import.meta.env.MY_API_KEY}`, // Replace with actual token
+              Authorization: `Bearer ${import.meta.env.VITE_MY_API_KEY}`,
+              "Content-Type": "application/json",
             },
           }
         );

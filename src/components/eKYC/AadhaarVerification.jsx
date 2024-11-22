@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -36,14 +31,15 @@ const AadhaarVerification = () => {
     onSubmit: async (values) => {
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_APP_BACKEND_URL}/api/v1/ekyc-verification`,
+          `${import.meta.env.VITE_APP_BACKEND_URL}/ekyc-verification`,
           {
             type: "ADV",
             id: String(values.aadhaar),
           },
           {
             headers: {
-              Authorization: `Bearer ${import.meta.env.MY_API_KEY}`, // Replace with actual token
+              Authorization: `Bearer ${import.meta.env.VITE_MY_API_KEY}`,
+              "Content-Type": "application/json",
             },
           }
         );
@@ -70,7 +66,7 @@ const AadhaarVerification = () => {
 
   return (
     <div
-      className="relative w-full h-[94vh] flex justify-center border:none"
+      className="relative w-full h-[92vh] sm:h-[94vh] flex justify-center border:none"
       // style={{ backgroundColor: "#15274F" }}
     >
       <Card className="h-fit w-full max-w-lg px-6 py-8 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
@@ -116,48 +112,56 @@ const AadhaarVerification = () => {
               <div
                 className={`text-base font-semibold border-y-2 border-gray-300 flex px-4 py-2  items-center justify-between w-full `}
               >
-               <div className="flex items-center  text-base  w-fit">
-               Response <FaArrowRightLong className="mx-2" />
-                <span className={`${
-                  verificationStatus === "Success"
-                    ? "text-green-600"
-                    : "text-red-600"
-                }`}>{verificationStatus}</span>
-               </div>
-                <FaChevronDown                 onClick={() => setShowDropdown(!showDropdown)}
-
+                <div className="flex items-center  text-base  w-fit">
+                  Response <FaArrowRightLong className="mx-2" />
+                  <span
+                    className={`${
+                      verificationStatus === "Success"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {verificationStatus}
+                  </span>
+                </div>
+                <FaChevronDown
+                  onClick={() => setShowDropdown(!showDropdown)}
                   className={`ml-2 transition-transform cursor-pointer ${
                     showDropdown ? "rotate-180" : ""
                   }`}
                 />
               </div>
 
-              {showDropdown && verificationStatus === "Success" && aadhaarDetails && (
-                <div className="mt-4 text-left text-gray-800 space-y-2 p-4">
-                  <div>
-                    <strong>Client ID:</strong> {aadhaarDetails.client_id}
+              {showDropdown &&
+                verificationStatus === "Success" &&
+                aadhaarDetails && (
+                  <div className="mt-4 text-left text-gray-800 space-y-2 p-4">
+                    <div>
+                      <strong>Client ID:</strong> {aadhaarDetails.client_id}
+                    </div>
+                    <div>
+                      <strong>Age Range:</strong> {aadhaarDetails.age_range}
+                    </div>
+                    <div>
+                      <strong>Aadhaar Number:</strong>{" "}
+                      {aadhaarDetails.aadhaar_number}
+                    </div>
+                    <div>
+                      <strong>State:</strong> {aadhaarDetails.state}
+                    </div>
+                    <div>
+                      <strong>Gender:</strong> {aadhaarDetails.gender}
+                    </div>
+                    <div>
+                      <strong>Last Digits:</strong> XXXXXXX
+                      {aadhaarDetails.last_digits}
+                    </div>
+                    <div>
+                      <strong>Is Mobile Linked:</strong>{" "}
+                      {aadhaarDetails.is_mobile ? "Yes" : "No"}
+                    </div>
                   </div>
-                  <div>
-                    <strong>Age Range:</strong> {aadhaarDetails.age_range}
-                  </div>
-                  <div>
-                    <strong>Aadhaar Number:</strong> {aadhaarDetails.aadhaar_number}
-                  </div>
-                  <div>
-                    <strong>State:</strong> {aadhaarDetails.state}
-                  </div>
-                  <div>
-                    <strong>Gender:</strong> {aadhaarDetails.gender}
-                  </div>
-                  <div>
-                    <strong>Last Digits:</strong> XXXXXXX{aadhaarDetails.last_digits}
-                  </div>
-                  <div>
-                    <strong>Is Mobile Linked:</strong>{" "}
-                    {aadhaarDetails.is_mobile ? "Yes" : "No"}
-                  </div>
-                </div>
-              )}
+                )}
             </div>
           )}
         </CardContent>

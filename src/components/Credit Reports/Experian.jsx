@@ -42,7 +42,7 @@ const ExperianCreditReport = () => {
     onSubmit: async (values) => {
       try {
         const payload = {
-          api_key: `${import.meta.env.MY_API_KEY}`,
+          api_key: `${import.meta.env.VITE_MY_API_KEY}`,
           type: "EXP",
           Name: values.name,
           MobileNumber: values.mobile,
@@ -51,11 +51,12 @@ const ExperianCreditReport = () => {
         };
 
         const response = await axios.post(
-          `${import.meta.env.MY_API_KEY}/api/v1/experian`,
+          `${import.meta.env.VITE_APP_BACKEND_URL}/experian`,
           payload,
           {
             headers: {
-              Authorization: `Bearer ${import.meta.env.MY_API_KEY}`,
+              Authorization: `Bearer ${import.meta.env.VITE_MY_API_KEY}`,
+              "Content-Type": "application/json",
             },
           }
         );

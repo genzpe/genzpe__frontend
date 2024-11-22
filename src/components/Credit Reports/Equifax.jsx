@@ -76,11 +76,12 @@ const EquifaxCreditReport = () => {
         };
 
         const response = await axios.post(
-          `${import.meta.env.VITE_APP_BACKEND_URL}/api/v1/equifax`,
+          `${import.meta.env.VITE_APP_BACKEND_URL}/equifax`,
           payload,
           {
             headers: {
-              Authorization: `Bearer ${import.meta.env.MY_API_KEY}`, // Replace with actual token
+              Authorization: `Bearer ${import.meta.env.VITE_MY_API_KEY}`,
+              "Content-Type": "application/json",
             },
           }
         );
@@ -112,7 +113,7 @@ const EquifaxCreditReport = () => {
   });
 
   return (
-    <div className="relative w-full h-[93vh] sm:h-[100vh] flex justify-center">
+    <div className="relative w-full h-[92vh] sm:h-[100vh] flex justify-center">
       <Card className="h-fit w-full max-w-lg px-6 py-8 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
         <CardHeader>
           <CardTitle className="text-center mt-2 tracking-wide text-lg ">
