@@ -15,6 +15,8 @@ import { RxQuestionMarkCircled } from "react-icons/rx";
 const AuthenticatedLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { logout } = useContext(AuthContext);
+
   const navigate = useNavigate();
   const location = useLocation();
   // Helper function to check if a link is active
@@ -23,12 +25,12 @@ const AuthenticatedLayout = ({ children }) => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  const [activeDropdown, setActiveDropdown] = useState(null); // Active dropdown state
+  // const [activeDropdown, setActiveDropdown] = useState(null); // Active dropdown state
   const [nestedDropdown, setNestedDropdown] = useState(null); // Nested dropdown state
-  const handleDropdown = (menu) => {
-    setActiveDropdown(activeDropdown === menu ? null : menu);
-    setNestedDropdown(null); // Reset nested dropdowns when main dropdown changes
-  };
+  // const handleDropdown = (menu) => {
+  //   setActiveDropdown(activeDropdown === menu ? null : menu);
+  //   setNestedDropdown(null); // Reset nested dropdowns when main dropdown changes
+  // };
 
   const handleNestedDropdown = (menu) => {
     setNestedDropdown(nestedDropdown === menu ? null : menu);
@@ -38,7 +40,6 @@ const AuthenticatedLayout = ({ children }) => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-  const { logout } = useContext(AuthContext);
 
   const handleLogout = async () => {
     try {
@@ -113,15 +114,15 @@ const AuthenticatedLayout = ({ children }) => {
             </div>
             <div className="flex items-center">
               <div className="flex justify-evenly items-center ms-3 w-fit">
-                <div className="mx-3">
-                  <RxQuestionMarkCircled className="w-8 h-8" />
+                <div className="md:mx-3 mx-2">
+                  <RxQuestionMarkCircled className="md:w-8 md:h-8 w-6 h-6" />
                 </div>
-                <div className="mx-3 ">
+                <div className="md:mx-3 mx-2 mt-[6px]">
                   <button>
-                    <IoMdNotificationsOutline className="mt-1 w-8 h-8" />
+                    <IoMdNotificationsOutline className="md:w-8 md:h-8 w-6 h-6" />
                   </button>
                 </div>
-                <div className="mx-3">
+                <div className="md:mx-3 mx-2">
                   {/* Profile Dropdown Button */}
                   <button
                     type="button"
@@ -130,7 +131,7 @@ const AuthenticatedLayout = ({ children }) => {
                     onClick={toggleDropdown}
                   >
                     <span className="sr-only">Open user menu</span>
-                    <CgProfile className="w-8 h-8" />
+                    <CgProfile className="md:w-8 md:h-8 w-6 h-6" />
                   </button>
                   {/* Profile Dropdown Menu */}
                   {isDropdownOpen && (
@@ -179,271 +180,241 @@ const AuthenticatedLayout = ({ children }) => {
             <ul className="space-y-2 font-medium">
               {/* Individual */}
               <li>
-                <div
-                  className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-800 rounded-md"
-                  onClick={() => handleDropdown("individual")}
-                >
+                <div className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-800 rounded-md">
                   <div className="flex items-center gap-2">
                     <FiGrid className="text-2xl" />
                     <span className="font-medium">Individual</span>
                   </div>
-                  {activeDropdown === "individual" ? (
-                    <FaChevronUp size={16} />
-                  ) : (
-                    <FaChevronDown size={16} />
-                  )}
                 </div>
-                {activeDropdown === "individual" && (
-                  <ul className="ml-4 mt-2 space-y-2">
-                    <li>
-                      <div
-                        className="pl-4 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800"
-                        onClick={() => handleNestedDropdown("eKYC")}
-                      >
-                        eKYC
-                        {nestedDropdown === "eKYC" ? (
-                          <FaChevronUp size={14} />
-                        ) : (
-                          <FaChevronDown size={14} />
-                        )}
-                      </div>
-                      {nestedDropdown === "eKYC" && (
-                        <ul className="ml-4 mt-2 space-y-2">
-                          <li
-                            onClick={() =>
-                              navigate(
-                                "/ekyc/pan-verification",
-                                setIsSidebarOpen(false)
-                              )
-                            }
-                            className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/ekyc/pan-verification")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            PAN Card Verification
-                          </li>
-                          <li
-                            onClick={() =>
-                              navigate(
-                                "/ekyc/aadhaar-verification",
-                                setIsSidebarOpen(false)
-                              )
-                            }
-                            className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/ekyc/aadhaar-verification")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            Aadhaar Validation
-                          </li>
-                          <li
-                            onClick={() =>
-                              navigate(
-                                "/ekyc/bankaccount-verification",
-                                setIsSidebarOpen(false)
-                              )
-                            }
-                            className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/ekyc/bankaccount-verification")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            Bank Account Verification
-                          </li>
-                          <li
-                            onClick={() =>
-                              navigate(
-                                "/ekyc/itr-verification",
-                                setIsSidebarOpen(false)
-                              )
-                            }
-                            className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/ekyc/itr-verification")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            ITR Compliance
-                          </li>
-                        </ul>
+                <ul className="ml-4 mt-2 space-y-2 border-l-2 border-[#99DE07]">
+                  <li>
+                    <div
+                      className="pl-4 flex items-center justify-start text-sm cursor-pointer hover:bg-blue-800"
+                      onClick={() => handleNestedDropdown("eKYC")}
+                    >
+                      eKYC
+                      {nestedDropdown === "eKYC" ? (
+                        <FaChevronUp size={14} className="ml-2" />
+                      ) : (
+                        <FaChevronDown size={14} className="ml-2" />
                       )}
-                    </li>
-                    <li>
-                      <div
-                        className="pl-4 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800"
-                        onClick={() => handleNestedDropdown("cKYC")}
-                      >
-                        cKYC
-                        {nestedDropdown === "cKYC" ? (
-                          <FaChevronUp size={14} />
-                        ) : (
-                          <FaChevronDown size={14} />
-                        )}
-                      </div>
-                      {nestedDropdown === "cKYC" && (
-                        <ul className="ml-4 mt-2 space-y-2">
-                          <li
-                            className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/ckyc/search")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            cKYC Search
-                          </li>
-                          <li
-                            className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/ckyc/download")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            cKYC Download
-                          </li>
-                        </ul>
+                    </div>
+                    {nestedDropdown === "eKYC" && (
+                      <ul className="ml-4 mt-2 space-y-2 border-l-2 border-[#99DE07]">
+                        <li
+                          onClick={() =>
+                            navigate(
+                              "/ekyc/pan-verification",
+                              setIsSidebarOpen(false)
+                            )
+                          }
+                          className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between text-sm cursor-pointer hover:bg-blue-800 ${
+                            isActiveLink("/ekyc/pan-verification")
+                              ? "bg-[#99DE07] text-black rounded pl-5"
+                              : ""
+                          }`}
+                        >
+                          PAN Card Verification
+                        </li>
+                        <li
+                          onClick={() =>
+                            navigate(
+                              "/ekyc/aadhaar-verification",
+                              setIsSidebarOpen(false)
+                            )
+                          }
+                          className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between text-sm cursor-pointer hover:bg-blue-800 ${
+                            isActiveLink("/ekyc/aadhaar-verification")
+                              ? "bg-[#99DE07] text-black rounded pl-5"
+                              : ""
+                          }`}
+                        >
+                          Aadhaar Validation
+                        </li>
+                        <li
+                          onClick={() =>
+                            navigate(
+                              "/ekyc/bankaccount-verification",
+                              setIsSidebarOpen(false)
+                            )
+                          }
+                          className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between  text-sm cursor-pointer hover:bg-blue-800 ${
+                            isActiveLink("/ekyc/bankaccount-verification")
+                              ? "bg-[#99DE07] text-black rounded pl-5"
+                              : ""
+                          }`}
+                        >
+                          Bank Account Verification
+                        </li>
+                        <li
+                          onClick={() =>
+                            navigate(
+                              "/ekyc/itr-verification",
+                              setIsSidebarOpen(false)
+                            )
+                          }
+                          className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between text-sm  cursor-pointer hover:bg-blue-800 ${
+                            isActiveLink("/ekyc/itr-verification")
+                              ? "bg-[#99DE07] text-black rounded pl-5"
+                              : ""
+                          }`}
+                        >
+                          ITR Compliance
+                        </li>
+                      </ul>
+                    )}
+                  </li>
+                  <li>
+                    <div
+                      className="pl-4 flex items-center justify-start text-sm cursor-pointer  hover:bg-blue-800"
+                      onClick={() => handleNestedDropdown("cKYC")}
+                    >
+                      cKYC
+                      {nestedDropdown === "cKYC" ? (
+                        <FaChevronUp size={14} className="ml-2" />
+                      ) : (
+                        <FaChevronDown size={14} className="ml-2" />
                       )}
-                    </li>
-                  </ul>
-                )}
+                    </div>
+                    {nestedDropdown === "cKYC" && (
+                      <ul className="ml-4 mt-2 space-y-2 border-l-2 border-[#99DE07] text-sm">
+                        <li
+                          className={`text-[14px] ml-1 my-3 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                            isActiveLink("/ckyc/search")
+                              ? "bg-[#99DE07] text-black rounded pl-5"
+                              : ""
+                          }`}
+                        >
+                          cKYC Search
+                        </li>
+                        <li
+                          className={`text-[14px] ml-1 my-3 pl-4 p-1 flex items-center justify-between  cursor-pointer hover:bg-blue-800 ${
+                            isActiveLink("/ckyc/download")
+                              ? "bg-[#99DE07] text-black rounded pl-5"
+                              : ""
+                          }`}
+                        >
+                          cKYC Download
+                        </li>
+                      </ul>
+                    )}
+                  </li>
+                </ul>
               </li>
 
               {/* Company */}
               <li className="mt-4">
-                <div
-                  className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-800 rounded-md"
-                  onClick={() => handleDropdown("company")}
-                >
+                <div className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-800 rounded-md">
                   <div className="flex items-center gap-2">
                     <FiGrid className="text-2xl" />
                     <span className="font-medium">Company</span>
                   </div>
-                  {activeDropdown === "company" ? (
-                    <FaChevronUp size={16} />
-                  ) : (
-                    <FaChevronDown size={16} />
-                  )}
                 </div>
-                {activeDropdown === "company" && (
-                  <ul className="ml-4 mt-2 space-y-2">
-                    <li>
-                      <div
-                        className="pl-4 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800"
-                        onClick={() => handleNestedDropdown("masterdata")}
-                      >
-                        Master Data
-                        {nestedDropdown === "masterdata" ? (
-                          <FaChevronUp size={14} />
-                        ) : (
-                          <FaChevronDown size={14} />
-                        )}
-                      </div>
-                      {nestedDropdown === "masterdata" && (
-                        <ul className="ml-4 mt-2 space-y-2">
-                          <li
-                            className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/master/mca-details")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            MCA Details
-                          </li>
-                          <li
-                            className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/masterdata/gst")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            GST
-                          </li>
-                        </ul>
+                <ul className="ml-4 mt-2 space-y-2 text-sm  border-l-2 border-[#99DE07]">
+                  <li>
+                    <div
+                      className="pl-4 flex items-center justify-start   cursor-pointer hover:bg-blue-800"
+                      onClick={() => handleNestedDropdown("masterdata")}
+                    >
+                      Master Data
+                      {nestedDropdown === "masterdata" ? (
+                        <FaChevronUp size={14} className="ml-2" />
+                      ) : (
+                        <FaChevronDown size={14} className="ml-2" />
                       )}
-                    </li>
-                    <li>
-                      <div
-                        className="pl-4 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800"
-                        onClick={() => handleNestedDropdown("creditreports")}
-                      >
-                        Credit Reports
-                        {nestedDropdown === "creditreports" ? (
-                          <FaChevronUp size={14} />
-                        ) : (
-                          <FaChevronDown size={14} />
-                        )}
-                      </div>
-                      {nestedDropdown === "creditreports" && (
-                        <ul className="ml-4 mt-2 space-y-2">
-                          <li
-                            onClick={() =>
-                              navigate(
-                                "/credit-report/equifax",
-                                setIsSidebarOpen(false)
-                              )
-                            }
-                            className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/credit-report/equifax")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            Equifax
-                          </li>
-                          <li
-                            onClick={() =>
-                              navigate(
-                                "/credit-report/experian",
-                                setIsSidebarOpen(false)
-                              )
-                            }
-                            className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/credit-report/experian")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            Experian
-                          </li>
-                        </ul>
+                    </div>
+                    {nestedDropdown === "masterdata" && (
+                      <ul className="ml-4 mt-2 space-y-2 text-sm border-l-2 border-[#99DE07]">
+                        <li
+                          className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                            isActiveLink("/master/mca-details")
+                              ? "bg-[#99DE07] text-black rounded pl-5"
+                              : ""
+                          }`}
+                        >
+                          MCA Details
+                        </li>
+                        <li
+                          className={`text-[14px] ml-1 my-3 pl-4 p-1 flex items-center justify-between  cursor-pointer hover:bg-blue-800 ${
+                            isActiveLink("/masterdata/gst")
+                              ? "bg-[#99DE07] text-black rounded pl-5"
+                              : ""
+                          }`}
+                        >
+                          GST
+                        </li>
+                      </ul>
+                    )}
+                  </li>
+                  <li>
+                    <div
+                      className="pl-4 flex items-center justify-start cursor-pointer text-sm hover:bg-blue-800"
+                      onClick={() => handleNestedDropdown("creditreports")}
+                    >
+                      Credit Reports
+                      {nestedDropdown === "creditreports" ? (
+                        <FaChevronUp size={14} className="ml-2" />
+                      ) : (
+                        <FaChevronDown size={14} className="ml-2" />
                       )}
-                    </li>
-                  </ul>
-                )}
+                    </div>
+                    {nestedDropdown === "creditreports" && (
+                      <ul className="ml-4 mt-2 space-y-2 border-l-2 border-[#99DE07]">
+                        <li
+                          onClick={() =>
+                            navigate(
+                              "/credit-report/equifax",
+                              setIsSidebarOpen(false)
+                            )
+                          }
+                          className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                            isActiveLink("/credit-report/equifax")
+                              ? "bg-[#99DE07] text-black rounded pl-5"
+                              : ""
+                          }`}
+                        >
+                          Equifax
+                        </li>
+                        <li
+                          onClick={() =>
+                            navigate(
+                              "/credit-report/experian",
+                              setIsSidebarOpen(false)
+                            )
+                          }
+                          className={`text-[14px] my-3 pl-4 ml-1 p-1 flex items-center justify-between   cursor-pointer hover:bg-blue-800 ${
+                            isActiveLink("/credit-report/experian")
+                              ? "bg-[#99DE07] text-black rounded pl-5"
+                              : ""
+                          }`}
+                        >
+                          Experian
+                        </li>
+                      </ul>
+                    )}
+                  </li>
+                </ul>
               </li>
 
               {/* Compliance */}
               <li className="mt-4">
-                <div
-                  className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-800 rounded-md"
-                  onClick={() => handleDropdown("compliance")}
-                >
+                <div className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-800 rounded-md">
                   <div className="flex items-center gap-2">
                     <FiGrid className="text-2xl" />
                     <span className="font-medium">Compliance</span>
                   </div>
-                  {activeDropdown === "compliance" ? (
-                    <FaChevronUp size={16} />
-                  ) : (
-                    <FaChevronDown size={16} />
-                  )}
                 </div>
-                {activeDropdown === "compliance" && (
-                  <ul className="ml-4 mt-2 space-y-2">
-                    <li
-                      className={`text-[14px] my-3 pl-4 p-1 flex items-center justify-between border-l-2 border-green-500 cursor-pointer hover:bg-blue-800 ${
-                        isActiveLink("/compliance/cic-reporting")
-                          ? "bg-[#99DE07] text-black rounded pl-5"
-                          : ""
-                      }`}
-                    >
-                      CIC Reporting
-                    </li>
-                  </ul>
-                )}
+                <ul className="ml-4 mt-2 space-y-2 border-l-2 text-sm border-[#99DE07]">
+                  <li
+                    className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                      isActiveLink("/compliance/cic-reporting")
+                        ? "bg-[#99DE07] text-black rounded pl-5"
+                        : ""
+                    }`}
+                  >
+                    CIC Reporting
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
