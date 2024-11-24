@@ -16,6 +16,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaChevronDown } from "react-icons/fa";
 import { AuthContext } from "@/context/AuthContext";
 import Loader from "../ui/Loader";
+import { formatCreditReport, handlePrint } from "@/lib/formatCreditReport";
+import { FaArrowRightLong } from "react-icons/fa6";
 // import ReportView from "./ReportView";
 
 // Validation schema
@@ -51,12 +53,6 @@ const EquifaxCreditReport = () => {
   const { loading, setLoading } = useContext(AuthContext);
 
   const printRef = useRef();
-
-  const handlePrint = () => {
-    if (printRef.current) {
-      window.print();
-    }
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -116,7 +112,6 @@ const EquifaxCreditReport = () => {
             setHtmlReport(response.data.data); // Handle the HTML response
             setIsModalOpen(true);
             setShowDropdown(true);
-            console.log(response.data.data);
             toast.success("Credit report fetched successfully!");
           } else {
             setReportStatus("Failed");
@@ -352,7 +347,8 @@ const EquifaxCreditReport = () => {
               <div className="absolute bottom-0 w-full bg-green-100 rounded-md flex flex-col items-start">
                 <div className="text-base font-semibold border-y-2 border-gray-300 px-4 py-2 flex items-center justify-between w-full">
                   <div className="flex items-center text-base w-fit">
-                    Status:{" "}
+                    Status
+                    <FaArrowRightLong className="mx-2" />
                     <span
                       className={`${
                         reportStatus === "Success"
@@ -377,7 +373,7 @@ const EquifaxCreditReport = () => {
                 {showDropdown && reportStatus === "Success" && (
                   <>
                     {creditReport && (
-                      <div className="mt-4 text-left text-gray-800 space-y-2 p-4 border rounded shadow-sm">
+                      <div className="mt-4 text-left text-gray-800 space-y-4 p-4 ">
                         <div>
                           <strong>Client ID:</strong>{" "}
                           {creditReport.client_id || "No data available"}
@@ -386,27 +382,83 @@ const EquifaxCreditReport = () => {
                           <strong>Name:</strong>{" "}
                           {creditReport.name || "No data available"}
                         </div>
-                        {/* Other fields */}
+                        <div>
+                          <strong>Date of Birth:</strong>{" "}
+                          {creditReport.dob || "No data available"}
+                        </div>
+                        <div>
+                          <strong>Address:</strong>{" "}
+                          {creditReport.address || "No data available"}
+                        </div>
+                        <div>
+                          <strong>Phone Number:</strong>{" "}
+                          {creditReport.phone || "No data available"}
+                        </div>
+                        <div>
+                          <strong>Email:</strong>{" "}
+                          {creditReport.email || "No data available"}
+                        </div>
+                        <div>
+                          <strong>Credit Score:</strong>{" "}
+                          {creditReport.credit_score || "No data available"}
+                        </div>
+                        <div>
+                          <strong>Inquiry Purpose:</strong>{" "}
+                          {creditReport.inquiry_purpose || "No data available"}
+                        </div>
+                        <div>
+                          <strong>Account Details:</strong>{" "}
+                          {creditReport.account_details ? (
+                            <ul className="list-disc pl-5">
+                              {creditReport.account_details.map(
+                                (account, index) => (
+                                  <li key={index}>
+                                    {account.type}: {account.balance}
+                                  </li>
+                                )
+                              )}
+                            </ul>
+                          ) : (
+                            "No data available"
+                          )}
+                        </div>
+                        <div>
+                          <strong>Enquiries:</strong>{" "}
+                          {creditReport.enquiries ? (
+                            <ul className="list-disc pl-5">
+                              {creditReport.enquiries.map((enquiry, index) => (
+                                <li key={index}>
+                                  {enquiry.date} - {enquiry.purpose}
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            "No data available"
+                          )}
+                        </div>
                       </div>
                     )}
+
                     {/* Modal for HTML Report */}
                     {isModalOpen && htmlReport && (
                       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                         <div className="bg-white rounded-lg p-6 max-w-4xl w-full">
-                          <div className="flex justify-between items-center border-b pb-4">
-                            {/* <h2 className="text-xl font-semibold">
+                          {/* <div className="flex justify-between items-center border-b pb-4">
+                            <h2 className="text-xl font-semibold">
                             HTML Credit Report
                           </h2>
-                          */}
-                          </div>
+                         
+                          </div> */}
                           <div
                             ref={printRef}
                             className="mt-4 overflow-y-auto"
-                            dangerouslySetInnerHTML={{ __html: htmlReport }}
+                            dangerouslySetInnerHTML={{
+                              __html: formatCreditReport(htmlReport),
+                            }}
                           />
                           <div className="md:mt-4 mt-0 text-right">
                             <button
-                              onClick={handlePrint}
+                              onClick={() => handlePrint(printRef)}
                               className="md:px-4 px-2 md:py-2 py-1  bg-blue-500 text-white rounded hover:bg-blue-600"
                             >
                               Print
