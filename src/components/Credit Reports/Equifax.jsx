@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,6 +14,9 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaChevronDown } from "react-icons/fa";
+import { AuthContext } from "@/context/AuthContext";
+import Loader from "../ui/Loader";
+// import ReportView from "./ReportView";
 
 // Validation schema
 const validationSchema = yup.object({
@@ -42,7 +45,18 @@ const validationSchema = yup.object({
 const EquifaxCreditReport = () => {
   const [reportStatus, setReportStatus] = useState(null);
   const [creditReport, setCreditReport] = useState(null);
+  const [htmlReport, setHtmlReport] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { loading, setLoading } = useContext(AuthContext);
+
+  const printRef = useRef();
+
+  const handlePrint = () => {
+    if (printRef.current) {
+      window.print();
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -55,14 +69,16 @@ const EquifaxCreditReport = () => {
       postal: "",
       mobile: "",
       idValue: "",
+      responseType: "JSON",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
+        setLoading(true);
         const payload = {
-          api_key: `${import.meta.env.MY_API_KEY}`,
+          api_key: `${import.meta.env.VITE_MY_API_KEY}`,
           type: "EQCR",
-          response_type: "JSON",
+          response_type: values.responseType,
           eqreporttype: "",
           FirstName: values.firstName,
           MiddleName: values.middleName,
@@ -85,25 +101,39 @@ const EquifaxCreditReport = () => {
             },
           }
         );
-
-        if (response.data && response.data.success) {
-          setReportStatus("Success");
-          setCreditReport(response.data);
-          setCreditReport(response.data.data.response || {});
-          toast.success(
-            response.data.message || "Credit report fetched successfully!"
-          );
-        } else {
-          setReportStatus("Failed");
-          setCreditReport(null);
-          toast.error(
-            response.data.message || "Failed to fetch the credit report!"
-          );
+        setLoading(false);
+        if (response.data) {
+          if (payload.response_type === "JSON" && response.data.success) {
+            setReportStatus("Success");
+            setHtmlReport(null);
+            setCreditReport(response.data.data.response || {});
+            toast.success(
+              response.data.message || "Credit report fetched successfully!"
+            );
+          } else if (payload.response_type === "HTML") {
+            setReportStatus("Success");
+            setCreditReport(null);
+            setHtmlReport(response.data.data); // Handle the HTML response
+            setIsModalOpen(true);
+            setShowDropdown(true);
+            console.log(response.data.data);
+            toast.success("Credit report fetched successfully!");
+          } else {
+            setReportStatus("Failed");
+            setCreditReport(null);
+            setHtmlReport(null);
+            toast.error(
+              response.data.message || "Failed to fetch the credit report!"
+            );
+          }
         }
       } catch (error) {
+        setLoading(false);
+
         console.error("Error:", error);
         setReportStatus("Failed");
         setCreditReport(null);
+        setHtmlReport(null);
         toast.error(
           error.response?.data?.message ||
             "Error while fetching the credit report. Please try again."
@@ -113,149 +143,296 @@ const EquifaxCreditReport = () => {
   });
 
   return (
-    <div className="relative w-full h-[92vh] sm:h-[100vh] flex justify-center">
-      <Card className="h-fit w-full max-w-lg px-6 py-8 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
-        <CardHeader>
-          <CardTitle className="text-center mt-2 tracking-wide text-lg ">
-            Equifax Credit Report
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="w-full flex flex-col items-center">
-          <form
-            onSubmit={formik.handleSubmit}
-            className="w-full flex flex-col items-center justify-start"
-          >
-            {[
-              { id: "firstName", placeholder: "First Name" },
-              { id: "middleName", placeholder: "Middle Name" },
-              { id: "lastName", placeholder: "Last Name" },
-              { id: "dob", placeholder: "Date of Birth (YYYY-MM-DD)" },
-              { id: "address", placeholder: "Address" },
-              { id: "state", placeholder: "State" },
-              { id: "postal", placeholder: "Postal Code" },
-              { id: "mobile", placeholder: "Mobile Number" },
-              { id: "idValue", placeholder: "ID Value (e.g., PAN)" },
-            ].map((field) => (
-              <div key={field.id} className="w-full text-sm max-w-sm mb-4">
+    <>
+      {loading && <Loader />}
+
+      <div className="relative w-full flex justify-center">
+        <Card className="h-fit w-full max-w-lg px-6 md:py-8 pb-8 pt-4 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
+          <CardHeader>
+            <CardTitle className="text-center md:mt-2 mt-0 tracking-wide text-lg ">
+              Equifax Credit Report
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="w-full flex flex-col items-center">
+            <form
+              onSubmit={formik.handleSubmit}
+              className="w-full flex flex-col items-center justify-start"
+            >
+              <div className="w-full text-sm max-w-sm mb-4">
                 <Input
-                  id={field.id}
-                  name={field.id}
+                  id="firstName"
+                  name="firstName"
                   type="text"
-                  placeholder={field.placeholder}
+                  placeholder="First Name"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values[field.id]}
+                  value={formik.values.firstName}
                   className="w-full border rounded-md p-3 px-6 text-start text-sm"
                 />
-                {formik.touched[field.id] && formik.errors[field.id] ? (
+                {formik.touched.firstName && formik.errors.firstName ? (
                   <div className="text-red-500 text-sm mt-2">
-                    {formik.errors[field.id]}
+                    {formik.errors.firstName}
                   </div>
                 ) : null}
               </div>
-            ))}
 
-            <Button
-              type="submit"
-              className="w-full max-w-sm bg-white-700 text-gray-400 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50"
-            >
-              Fetch Credit Report
-            </Button>
-          </form>
-
-          {/* Display Credit Report Result */}
-          {reportStatus && (
-            <div className="absolute bottom-0 w-full bg-green-100 rounded-md flex flex-col items-start">
-              <div className="text-base font-semibold border-y-2 border-gray-300 px-4 py-2 flex items-center justify-between w-full">
-                <div className="flex items-center text-base w-fit">
-                  Status:{" "}
-                  <span
-                    className={`${
-                      reportStatus === "Success"
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }`}
-                  >
-                    {reportStatus}
-                  </span>
-                </div>
-                <FaChevronDown
-                  onClick={() => setShowDropdown(!showDropdown)}
-                  className={`ml-2 transition-transform cursor-pointer ${
-                    showDropdown ? "rotate-180" : ""
-                  }`}
+              <div className="w-full text-sm max-w-sm mb-4">
+                <Input
+                  id="middleName"
+                  name="middleName"
+                  type="text"
+                  placeholder="Middle Name (Optional)"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.middleName}
+                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
                 />
               </div>
 
-              {showDropdown && reportStatus === "Success" && creditReport && (
-                <div className="mt-4 text-left text-gray-800 space-y-2 p-4 border rounded shadow-sm">
-                  <div>
-                    <strong>Client ID:</strong>{" "}
-                    {creditReport.client_id || "No data available"}
+              <div className="w-full text-sm max-w-sm mb-4">
+                <Input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  placeholder="Last Name"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.lastName}
+                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                />
+                {formik.touched.lastName && formik.errors.lastName ? (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.lastName}
                   </div>
-                  <div>
-                    <strong>Name:</strong>{" "}
-                    {creditReport.name || "No data available"}
+                ) : null}
+              </div>
+
+              <div className="w-full text-sm max-w-sm mb-4">
+                <Input
+                  id="dob"
+                  name="dob"
+                  type="text"
+                  placeholder="Date of Birth (YYYY-MM-DD)"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.dob}
+                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                />
+                {formik.touched.dob && formik.errors.dob ? (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.dob}
                   </div>
-                  <div>
-                    <strong>Mobile:</strong>{" "}
-                    {creditReport.mobile || "No data available"}
+                ) : null}
+              </div>
+
+              <div className="w-full text-sm max-w-sm mb-4">
+                <Input
+                  id="address"
+                  name="address"
+                  type="text"
+                  placeholder="Address"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.address}
+                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                />
+                {formik.touched.address && formik.errors.address ? (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.address}
                   </div>
-                  <div>
-                    <strong>PAN:</strong>{" "}
-                    {creditReport.pan || "No data available"}
+                ) : null}
+              </div>
+
+              <div className="w-full text-sm max-w-sm mb-4">
+                <Input
+                  id="state"
+                  name="state"
+                  type="text"
+                  placeholder="State"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.state}
+                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                />
+                {formik.touched.state && formik.errors.state ? (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.state}
                   </div>
-                  <div>
-                    <strong>Credit Score:</strong>{" "}
-                    {creditReport.credit_score || "No data available"}
+                ) : null}
+              </div>
+
+              <div className="w-full text-sm max-w-sm mb-4">
+                <Input
+                  id="postal"
+                  name="postal"
+                  type="text"
+                  placeholder="Postal Code (6 digits)"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.postal}
+                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                />
+                {formik.touched.postal && formik.errors.postal ? (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.postal}
                   </div>
-                  <div>
-                    <strong>Report Date:</strong>{" "}
-                    {creditReport.credit_report?.CreditProfileHeader?.ReportDate
-                      ? new Intl.DateTimeFormat("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }).format(
-                          new Date(
-                            creditReport.credit_report.CreditProfileHeader.ReportDate
-                          )
-                        )
-                      : "No data available"}
+                ) : null}
+              </div>
+
+              <div className="w-full text-sm max-w-sm mb-4">
+                <Input
+                  id="mobile"
+                  name="mobile"
+                  type="text"
+                  placeholder="Mobile Number (10 digits)"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.mobile}
+                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                />
+                {formik.touched.mobile && formik.errors.mobile ? (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.mobile}
                   </div>
-                  <div>
-                    <strong>Report Time:</strong>{" "}
-                    {creditReport.credit_report?.CreditProfileHeader?.ReportTime
-                      ? new Intl.DateTimeFormat("en-US", {
-                          hour: "numeric",
-                          minute: "numeric",
-                          second: "numeric",
-                          hour12: true,
-                        }).format(
-                          new Date(
-                            creditReport.credit_report.CreditProfileHeader.ReportTime
-                          )
-                        )
-                      : "No data available"}
+                ) : null}
+              </div>
+
+              <div className="w-full text-sm max-w-sm mb-4">
+                <Input
+                  id="idValue"
+                  name="idValue"
+                  type="text"
+                  placeholder="ID Value"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.idValue}
+                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                />
+                {formik.touched.idValue && formik.errors.idValue ? (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.idValue}
                   </div>
-                  <div>
-                    <strong>Report Number:</strong>{" "}
-                    {creditReport.credit_report?.CreditProfileHeader
-                      ?.ReportNumber || "No data available"}
+                ) : null}
+              </div>
+              <div className="w-full text-sm max-w-sm mb-4">
+                <label
+                  htmlFor="responseType"
+                  className="block text-gray-600 mb-2"
+                >
+                  Response Type
+                </label>
+                <select
+                  id="responseType"
+                  name="responseType"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.responseType}
+                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                >
+                  <option value="JSON">JSON</option>
+                  <option value="HTML">HTML</option>
+                </select>
+                {formik.touched.responseType && formik.errors.responseType ? (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.responseType}
                   </div>
-                  <div>
-                    <strong>Total CAPS Last 7 Days:</strong>{" "}
-                    {creditReport.credit_report?.TotalCAPS_Summary
-                      ?.TotalCAPSLast7Days || "No data available"}
+                ) : null}
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full max-w-sm bg-white-700 text-gray-400 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50"
+              >
+                Fetch Credit Report
+              </Button>
+            </form>
+
+            {/* Display Credit Report Result */}
+            {reportStatus && (
+              <div className="absolute bottom-0 w-full bg-green-100 rounded-md flex flex-col items-start">
+                <div className="text-base font-semibold border-y-2 border-gray-300 px-4 py-2 flex items-center justify-between w-full">
+                  <div className="flex items-center text-base w-fit">
+                    Status:{" "}
+                    <span
+                      className={`${
+                        reportStatus === "Success"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {reportStatus}
+                    </span>
                   </div>
+                  <FaChevronDown
+                    onClick={() => {
+                      setShowDropdown(!showDropdown);
+                      setIsModalOpen(!!htmlReport); // Use !! to coerce htmlReport into a boolean
+                    }}
+                    className={`ml-2 transition-transform cursor-pointer ${
+                      showDropdown ? "rotate-180" : ""
+                    }`}
+                  />
                 </div>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-      <ToastContainer />
-    </div>
+
+                {showDropdown && reportStatus === "Success" && (
+                  <>
+                    {creditReport && (
+                      <div className="mt-4 text-left text-gray-800 space-y-2 p-4 border rounded shadow-sm">
+                        <div>
+                          <strong>Client ID:</strong>{" "}
+                          {creditReport.client_id || "No data available"}
+                        </div>
+                        <div>
+                          <strong>Name:</strong>{" "}
+                          {creditReport.name || "No data available"}
+                        </div>
+                        {/* Other fields */}
+                      </div>
+                    )}
+                    {/* Modal for HTML Report */}
+                    {isModalOpen && htmlReport && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                        <div className="bg-white rounded-lg p-6 max-w-4xl w-full">
+                          <div className="flex justify-between items-center border-b pb-4">
+                            {/* <h2 className="text-xl font-semibold">
+                            HTML Credit Report
+                          </h2>
+                          */}
+                          </div>
+                          <div
+                            ref={printRef}
+                            className="mt-4 overflow-y-auto"
+                            dangerouslySetInnerHTML={{ __html: htmlReport }}
+                          />
+                          <div className="md:mt-4 mt-0 text-right">
+                            <button
+                              onClick={handlePrint}
+                              className="md:px-4 px-2 md:py-2 py-1  bg-blue-500 text-white rounded hover:bg-blue-600"
+                            >
+                              Print
+                            </button>
+                            <button
+                              onClick={() => {
+                                setShowDropdown(!showDropdown);
+                                setIsModalOpen(false);
+                              }}
+                              className="text-gray-500 hover:text-gray-800 ml-2 "
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        <ToastContainer />
+      </div>
+    </>
   );
 };
 

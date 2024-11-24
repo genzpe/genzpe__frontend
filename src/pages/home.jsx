@@ -41,10 +41,7 @@ const Home = () => {
   };
 
   return (
-    <div
-      className="relative w-full h-full p-5 flex justify-center"
-      style={{ backgroundColor: "#5B4C79" }}
-    >
+    <div className="relative w-full h-full p-5 flex justify-center">
       <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg overflow-hidden">
         <CardHeader>
           <CardTitle className="text-center mt-10">
