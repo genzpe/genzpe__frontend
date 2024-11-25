@@ -180,6 +180,7 @@ const ExperianCreditReport = () => {
                     to={creditReportLink}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => setCreditReportLink(null)}
                   >
                     View Credit Report
                   </Link>
