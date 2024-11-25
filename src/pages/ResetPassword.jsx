@@ -14,11 +14,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import logoImage from "../assets/logoLogin.png";
 import sidebackground from "../assets/sideBackgroundAuth.png";
 import { AuthContext } from "@/context/AuthContext";
 import AuthLoader from "@/components/ui/AuthLoader";
+
 const validationSchema = yup.object({
   password: yup.string().required("Password is required"),
   confirmPassword: yup
@@ -59,32 +61,29 @@ const ResetPassword = () => {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       const { confirmPassword, ...submitValues } = values;
-      console.log(submitValues);
       try {
         setLoading(true);
-        const response = await fetch(
+        const response = await axios.patch(
           `${import.meta.env.VITE_APP_BACKEND_URL}/auth/reset_password`,
+          submitValues,
           {
-            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(submitValues),
           }
         );
-        const result = await response.json();
         setLoading(false);
-        if (response.ok) {
-          toast.success(`${result.message}`);
+        if (response.status === 200) {
+          toast.success(`${response.data.message}`);
           setTimeout(() => {
             navigate("/login");
           }, 2000);
-        } else {
-          toast.error(`Failed: ${result.message}`);
         }
       } catch (error) {
         setLoading(false);
-        toast.error(`Error: ${error.message}`);
+        const errorMessage =
+          error.response?.data?.message || "An unexpected error occurred";
+        toast.error(`Error: ${errorMessage}`);
       }
     },
   });
@@ -93,7 +92,7 @@ const ResetPassword = () => {
     <>
       {loading && <AuthLoader />}
 
-      <div className="relative w-full h-fit flex  justify-between  overflow-hidden ">
+      <div className="relative w-full h-fit flex justify-between overflow-hidden">
         <img
           src={sidebackground}
           alt="BackgroundImage"
@@ -108,7 +107,7 @@ const ResetPassword = () => {
           <CardHeader>
             <CardTitle className="text-center mt-10">Reset Password</CardTitle>
             <CardDescription className="text-center pt-2">
-              Enter your new password & OTP we send
+              Enter your new password & OTP we sent
             </CardDescription>
           </CardHeader>
           <CardContent className="w-full flex flex-col items-center">
@@ -121,7 +120,6 @@ const ResetPassword = () => {
                   id="password"
                   name="password"
                   type={passwordVisible ? "text" : "password"}
-                  label="Password"
                   placeholder="Enter new password"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -151,7 +149,6 @@ const ResetPassword = () => {
                   id="confirmPassword"
                   name="confirmPassword"
                   type={confirmPasswordVisible ? "text" : "password"}
-                  label="Confirm Password"
                   placeholder="Confirm new password"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -185,7 +182,6 @@ const ResetPassword = () => {
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
-                  label="OTP"
                   placeholder="Enter the OTP"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}

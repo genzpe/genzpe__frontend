@@ -18,6 +18,7 @@ import { AuthContext } from "@/context/AuthContext";
 import sidebackground from "../assets/sideBackgroundAuth.png";
 import logoImage from "../assets/logoLogin.png";
 import AuthLoader from "@/components/ui/AuthLoader";
+import axios from "axios";
 
 // Validation Schema for Formik
 const validationSchema = yup.object({
@@ -57,20 +58,16 @@ const Register = () => {
       try {
         setLoading(true);
 
-        const response = await fetch(
+        const response = await axios.post(
           `${import.meta.env.VITE_APP_BACKEND_URL}/auth/sign_up`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify(submitValues),
-          }
+          submitValues,
+          { withCredentials: true }
         );
+
         setLoading(false);
-        const result = await response.json();
-        if (response.ok) {
+        const result = response.data;
+
+        if (response.status === 200) {
           toast.success(`${result.message}`);
           login("success");
           setTimeout(() => {
@@ -81,8 +78,10 @@ const Register = () => {
         }
       } catch (error) {
         setLoading(false);
+        const errorMessage =
+          error.response?.data?.message || error.message || "Unknown error";
+        toast.error(`Registration failed: ${errorMessage}`);
         console.error("Error:", error);
-        toast.error(`Registration failed: ${error.message}`);
       }
     },
   });
