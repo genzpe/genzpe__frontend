@@ -17,7 +17,9 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
 import sidebackground from "../assets/sideBackgroundAuth.png";
 import logoImage from "../assets/logoLogin.png";
+import AuthLoader from "@/components/ui/AuthLoader";
 
+// Validation Schema for Formik
 const validationSchema = yup.object({
   name: yup.string().required("Name is required"),
   email: yup
@@ -36,17 +38,11 @@ const validationSchema = yup.object({
 
 const Register = () => {
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
+  const { login, loading, setLoading } = useContext(AuthContext);
 
+  // State for toggling password visibility
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-
-  const togglePasswordVisibility = () => {
-    setPasswordVisible(!passwordVisible);
-  };
-  const toggleConfirmPasswordVisibility = () => {
-    setConfirmPasswordVisible(!confirmPasswordVisible);
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -59,7 +55,7 @@ const Register = () => {
     onSubmit: async (values) => {
       const { confirmPassword, ...submitValues } = values;
       try {
-        console.log(import.meta.env);
+        setLoading(true);
 
         const response = await fetch(
           `${import.meta.env.VITE_APP_BACKEND_URL}/auth/sign_up`,
@@ -68,14 +64,12 @@ const Register = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            credentials: true,
+            credentials: "include",
             body: JSON.stringify(submitValues),
           }
         );
-        console.log("Register:", response);
-
+        setLoading(false);
         const result = await response.json();
-        console.log("Register:", result);
         if (response.ok) {
           toast.success(`${result.message}`);
           login("success");
@@ -86,6 +80,7 @@ const Register = () => {
           toast.error(`Registration failed: ${result.message}`);
         }
       } catch (error) {
+        setLoading(false);
         console.error("Error:", error);
         toast.error(`Registration failed: ${error.message}`);
       }
@@ -93,155 +88,147 @@ const Register = () => {
   });
 
   return (
-    <div className="relative w-full h-fit flex  justify-between  overflow-hidden">
-      <img
-        src={sidebackground}
-        alt="BackgroundImage"
-        className="max-w-[45%] max-h-[100vh]"
-      />
-      <Card className="h-full mt-20 mx-auto w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl md:px-20 rounded-none border-none">
-        <CardHeader>
-          {" "}
-          <img
-            src={logoImage}
-            className="m-auto w-[101px] h-[46px]"
-            alt="Genzype"
-          />
-          <CardTitle className="text-center text-2xl ">Welcome!</CardTitle>
-          <CardDescription className="text-center text-base">
-            Register to start your journey
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="w-full flex flex-col items-center">
-          <form
-            onSubmit={formik.handleSubmit}
-            className="w-full flex flex-col items-center"
-          >
-            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-4">
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                label="Name"
-                placeholder="Enter full name"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.name}
-                className="w-full"
-              />
-              {formik.touched.name && formik.errors.name ? (
-                <div className="text-red-500 text-sm mt-2 flex justify-start">
-                  {formik.errors.name}
-                </div>
-              ) : null}
-            </div>
-            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-4">
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                label="Email"
-                placeholder="Enter email ID"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.email}
-                className="w-full"
-              />
-              {formik.touched.email && formik.errors.email ? (
-                <div className="text-red-500 text-sm mt-2 flex justify-start">
-                  {formik.errors.email}
-                </div>
-              ) : null}
-            </div>
-            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg relative mb-4">
-              <Input
-                id="password"
-                name="password"
-                type={passwordVisible ? "text" : "password"}
-                label="Password"
-                placeholder="Password"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-                className="w-full"
-                onCopy={(e) => e.preventDefault()}
-                onPaste={(e) => e.preventDefault()}
-              />
-              <div
-                className={`absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-500 ${
-                  formik.touched.password && formik.errors.password
-                    ? "pb-6"
-                    : ""
-                }`}
-                onClick={togglePasswordVisibility}
-              >
-                {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-              </div>
-              {formik.touched.password && formik.errors.password ? (
-                <div className="text-red-500 text-sm mt-2 flex justify-start">
-                  {formik.errors.password}
-                </div>
-              ) : null}
-            </div>
-            <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg relative mb-4">
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type={confirmPasswordVisible ? "text" : "password"}
-                label="Confirm Password"
-                placeholder="Confirm Password"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.confirmPassword}
-                className="w-full"
-                onCopy={(e) => e.preventDefault()}
-                onPaste={(e) => e.preventDefault()}
-              />
-              <div
-                className={`absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-500 ${
-                  formik.touched.confirmPassword &&
-                  formik.errors.confirmPassword
-                    ? "pb-6"
-                    : ""
-                }`}
-                onClick={toggleConfirmPasswordVisibility}
-              >
-                {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
-              </div>
-              {formik.touched.confirmPassword &&
-              formik.errors.confirmPassword ? (
-                <div className="text-red-500 text-sm mt-2 flex justify-start">
-                  {formik.errors.confirmPassword}
-                </div>
-              ) : null}
-            </div>
-            <Button
-              type="submit"
-              className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mt-4"
-              style={{ backgroundColor: "#15274F" }}
+    <>
+      <ToastContainer position="top-right" autoClose={3000} />
+      {loading && <AuthLoader />}
+      <div className="relative w-full h-fit flex justify-between overflow-hidden">
+        <img
+          src={sidebackground}
+          alt="BackgroundImage"
+          className="max-w-[45%] max-h-[100vh]"
+        />
+        <Card className="h-full mt-20 mx-auto w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl rounded-lg border">
+          <CardHeader>
+            <img
+              src={logoImage}
+              className="m-auto w-[101px] h-[46px]"
+              alt="Genzype"
+            />
+            <CardTitle className="text-center text-2xl">Welcome!</CardTitle>
+            <CardDescription className="text-center text-base">
+              Register to start your journey
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="w-full flex flex-col items-center">
+            <form
+              onSubmit={formik.handleSubmit}
+              className="w-full flex flex-col items-center"
             >
-              Register
-            </Button>
-          </form>
-          <div className="flex flex-row">
-            <div className="mt-4 mr-4">Already have an account?</div>
-            <div
-              className="mt-4 text-[18px] font-semibold cursor-pointer"
-              style={{ color: "#15274F", transition: "color 0.3s" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#15274F")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#15274F")}
-              onClick={() => navigate("/login")}
-            >
-              Login here
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+              {/* Name Input */}
+              <div className="w-full max-w-lg mb-4">
+                <Input
+                  id="name"
+                  name="name"
+                  type="text"
+                  placeholder="Enter full name"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.name}
+                  className="w-full"
+                />
+                {formik.touched.name && formik.errors.name && (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.name}
+                  </div>
+                )}
+              </div>
 
-      {/* <div className="absolute bottom-0 lg:left-0 lg:p-4 pt-3 text-black lg:text-white">
-        Copyright @ 2024 AltiusNxt Technologies
-      </div> */}
-    </div>
+              {/* Email Input */}
+              <div className="w-full max-w-lg mb-4">
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Enter email ID"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.email}
+                  className="w-full"
+                />
+                {formik.touched.email && formik.errors.email && (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.email}
+                  </div>
+                )}
+              </div>
+
+              {/* Password Input */}
+              <div className="w-full max-w-lg relative mb-4">
+                <Input
+                  id="password"
+                  name="password"
+                  type={passwordVisible ? "text" : "password"}
+                  placeholder="Password"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.password}
+                  className="w-full"
+                />
+                <div
+                  className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                  onClick={() => setPasswordVisible(!passwordVisible)}
+                >
+                  {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                </div>
+                {formik.touched.password && formik.errors.password && (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.password}
+                  </div>
+                )}
+              </div>
+
+              {/* Confirm Password Input */}
+              <div className="w-full max-w-lg relative mb-4">
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={confirmPasswordVisible ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.confirmPassword}
+                  className="w-full"
+                />
+                <div
+                  className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                  onClick={() =>
+                    setConfirmPasswordVisible(!confirmPasswordVisible)
+                  }
+                >
+                  {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
+                </div>
+                {formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword && (
+                    <div className="text-red-500 text-sm mt-2">
+                      {formik.errors.confirmPassword}
+                    </div>
+                  )}
+              </div>
+
+              {/* Submit Button */}
+              <Button
+                type="submit"
+                className="w-full max-w-lg mt-4"
+                style={{ backgroundColor: "#15274F" }}
+              >
+                Register
+              </Button>
+            </form>
+
+            {/* Redirect to Login */}
+            <div className="mt-4 text-center">
+              <span>Already have an account?</span>
+              <span
+                className="ml-2 text-blue-600 cursor-pointer font-semibold"
+                onClick={() => navigate("/login")}
+              >
+                Login here
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 };
 
