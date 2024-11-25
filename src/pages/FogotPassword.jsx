@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
 import logoImage from "../assets/logoLogin.png";
 import sidebackground from "../assets/sideBackgroundAuth.png";
-import Loader from "@/components/ui/Loader";
+import AuthLoader from "@/components/ui/AuthLoader";
 
 const validationSchema = yup.object({
   email: yup
@@ -69,7 +69,7 @@ const ForgotPassword = () => {
 
   return (
     <>
-      {loading && <Loader />}
+      {loading && <AuthLoader />}
 
       <div className="relative w-full h-fit flex  justify-between  overflow-hidden ">
         <img
