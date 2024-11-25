@@ -47,6 +47,7 @@ const Home = () => {
 
   return (
     <>
+      <ToastContainer />
       {loading && <Loader />}
 
       <div className="relative w-full h-full p-5 flex justify-center">

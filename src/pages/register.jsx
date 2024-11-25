@@ -88,7 +88,7 @@ const Register = () => {
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={2000} />
       {loading && <AuthLoader />}
       <div className="relative w-full h-fit flex justify-between overflow-hidden">
         <img

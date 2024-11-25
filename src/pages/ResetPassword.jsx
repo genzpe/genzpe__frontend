@@ -90,6 +90,7 @@ const ResetPassword = () => {
 
   return (
     <>
+      <ToastContainer />
       {loading && <AuthLoader />}
 
       <div className="relative w-full h-fit flex justify-between overflow-hidden">
