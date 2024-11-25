@@ -17,6 +17,7 @@ import { AuthContext } from "@/context/AuthContext";
 import logoImage from "../assets/logoLogin.png";
 import sidebackground from "../assets/sideBackgroundAuth.png";
 import AuthLoader from "@/components/ui/AuthLoader";
+import axios from "axios"; // Custom Axios instance
 
 const validationSchema = yup.object({
   email: yup
@@ -38,31 +39,30 @@ const ForgotPassword = () => {
     onSubmit: async (values) => {
       try {
         setLoading(true);
-        const response = await fetch(
+        const response = await axios.post(
           `${import.meta.env.VITE_APP_BACKEND_URL}/auth/forgot_password`,
+          values, // Send form values directly
           {
-            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(values),
           }
         );
-        const result = await response.json();
-        console.log("Forgot Password:", result);
+        console.log("Forgot Password:", response.data);
         setLoading(false);
-        if (response.ok) {
-          toast.success(`${result.message}`);
+
+        if (response.status === 200) {
+          toast.success(response.data.message);
           setIsPasswordResetInitiated(true);
           setTimeout(() => {
             navigate("/reset-password", { state: { email: values.email } });
           }, 2000);
-        } else {
-          toast.error(`Failed: ${result.message}`);
         }
       } catch (error) {
         setLoading(false);
-        toast.error(`Error: ${error.message}`);
+        const errorMessage =
+          error.response?.data?.message || "Something went wrong!";
+        toast.error(`Error: ${errorMessage}`);
       }
     },
   });
@@ -122,10 +122,6 @@ const ForgotPassword = () => {
             </form>
           </CardContent>
         </Card>
-
-        {/* <div className='absolute bottom-0 lg:left-0 lg:p-4 pt-3 text-black lg:text-white'>
-                Copyright @ 2024 AltiusNxt Technologies
-            </div> */}
       </div>
     </>
   );
