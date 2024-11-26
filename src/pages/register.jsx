@@ -98,9 +98,9 @@ const Register = () => {
         <img
           src={sidebackground}
           alt="BackgroundImage"
-          className="max-w-[45%] max-h-[100vh]"
+          className="hidden md:inline-block md:max-w-[45%] max-h-[100vh]"
         />
-        <Card className="h-full mt-20 mx-auto w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl rounded-lg border">
+        <Card className="h-full mt-20 mx-auto w-full md:w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl md:px-20 rounded-none border-none">
           <CardHeader>
             <img
               src={logoImage}
@@ -118,7 +118,8 @@ const Register = () => {
               className="w-full flex flex-col items-center"
             >
               {/* Name Input */}
-              <div className="w-full max-w-lg mb-4">
+              <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-4">
+                {" "}
                 <Input
                   id="name"
                   name="name"
@@ -137,7 +138,8 @@ const Register = () => {
               </div>
 
               {/* Email Input */}
-              <div className="w-full max-w-lg mb-4">
+              <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-4">
+                {" "}
                 <Input
                   id="email"
                   name="email"
@@ -156,7 +158,8 @@ const Register = () => {
               </div>
 
               {/* Password Input */}
-              <div className="w-full max-w-lg relative mb-4">
+              <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg relative mb-4">
+                {" "}
                 <Input
                   id="password"
                   name="password"
@@ -181,7 +184,8 @@ const Register = () => {
               </div>
 
               {/* Confirm Password Input */}
-              <div className="w-full max-w-lg relative mb-4">
+              <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg relative mb-4">
+                {" "}
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -208,7 +212,8 @@ const Register = () => {
                   )}
               </div>
               {/* Api key */}
-              <div className="w-full max-w-lg mb-4">
+              <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-4">
+                {" "}
                 <Input
                   id="apikey"
                   name="apikey"
@@ -229,7 +234,7 @@ const Register = () => {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="w-full max-w-lg mt-4"
+                className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mt-4"
                 style={{ backgroundColor: "#15274F" }}
               >
                 Register
@@ -240,7 +245,7 @@ const Register = () => {
             <div className="mt-4 text-center">
               <span>Already have an account?</span>
               <span
-                className="ml-2 text-blue-600 cursor-pointer font-semibold"
+                className="ml-2 text-base text-[#15274F] cursor-pointer font-semibold"
                 onClick={() => navigate("/login")}
               >
                 Login here

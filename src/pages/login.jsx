@@ -95,13 +95,13 @@ const Login = () => {
     <>
       {loading && <AuthLoader />}
 
-      <div className="relative w-full h-fit flex  justify-between  overflow-hidden">
+      <div className="relative w-full h-fit flex  justify-between  overflow-hidden border-none">
         <img
           src={sidebackground}
           alt="BackgroundImage"
-          className="max-w-[45%] max-h-[100vh]"
+          className="hidden md:inline-block md:max-w-[45%] max-h-[100vh]"
         />
-        <Card className="h-full mt-20 mx-auto w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl md:px-20 rounded-none border-none">
+        <Card className="h-full mt-20 mx-auto w-full md:w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl md:px-20 rounded-none border-none">
           <CardHeader>
             <img
               src={logoImage}
@@ -115,7 +115,7 @@ const Login = () => {
               Sign in now to continue your journey
             </CardDescription>
           </CardHeader>
-          <CardContent className="w-full flex flex-col items-center">
+          <CardContent className="w-full flex flex-col items-center ">
             <form
               onSubmit={formik.handleSubmit}
               className="w-full flex flex-col items-center"
@@ -167,9 +167,9 @@ const Login = () => {
                 ) : null}
               </div>
 
-              <div className="w-full flex justify-end mb-2  px-4">
+              <div className="w-full flex justify-end mb-2 px-4 md:p-0">
                 <div
-                  className="text-[18px] font-semibold cursor-pointer text-red-400 hover:text-red-600"
+                  className="text-[14px] font-semibold cursor-pointer text-red-400 hover:text-red-600"
                   style={{ transition: "color 0.3s" }}
                   onClick={() => navigate("/forgot-password")}
                 >
@@ -188,7 +188,7 @@ const Login = () => {
             <div className="flex flex-row">
               <div className="mt-4 mr-5">Are you a new user?</div>
               <div
-                className="mt-4 text-[18px] font-semibold cursor-pointer"
+                className="mt-4 text-base font-semibold cursor-pointer"
                 style={{ color: "#15274F", transition: "color 0.3s" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#15274F")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "#15274F")}
@@ -199,9 +199,6 @@ const Login = () => {
             </div>
           </CardContent>
         </Card>
-        {/* <div className="absolute bottom-0 lg:left-0 lg:p-4 pt-3 text-black lg:text-white">
-        Copyright @ 2024 AltiusNxt Technologies
-      </div> */}
       </div>
     </>
   );

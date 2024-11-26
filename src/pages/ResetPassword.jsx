@@ -95,16 +95,16 @@ const ResetPassword = () => {
         <img
           src={sidebackground}
           alt="BackgroundImage"
-          className="max-w-[45%] max-h-[100vh]"
+          className="hidden md:inline-block md:max-w-[45%] max-h-[100vh]"
         />
-        <Card className="h-full mt-20 mx-auto w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl md:px-20 rounded-none border-none">
+        <Card className="h-full mt-[6.5rem] mx-auto w-full md:w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl md:px-20 rounded-none border-none">
           <img
             src={logoImage}
             className="m-auto w-[101px] h-[46px]"
             alt="Genzype"
           />
           <CardHeader>
-            <CardTitle className="text-center mt-10">Reset Password</CardTitle>
+            <CardTitle className="text-center">Reset Password</CardTitle>
             <CardDescription className="text-center pt-2">
               Enter your new password & OTP we sent
             </CardDescription>
