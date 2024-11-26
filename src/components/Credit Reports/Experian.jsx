@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+
 import { FaChevronDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Loader from "../ui/Loader";
@@ -35,7 +35,7 @@ const ExperianCreditReport = () => {
   const [creditReport, setCreditReport] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [creditReportLink, setCreditReportLink] = useState(null);
-  const { loading, setLoading } = useContext(AuthContext);
+  const { loading, setLoading, api_key } = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {
@@ -49,7 +49,7 @@ const ExperianCreditReport = () => {
       try {
         setLoading(true);
         const payload = {
-          api_key: `${import.meta.env.VITE_MY_API_KEY}`,
+          api_key: { api_key },
           type: "EXP",
           Name: values.name,
           MobileNumber: values.mobile,
@@ -62,7 +62,7 @@ const ExperianCreditReport = () => {
           payload,
           {
             headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_MY_API_KEY}`,
+              Authorization: `Bearer ${api_key}`,
               "Content-Type": "application/json",
             },
           }
@@ -83,7 +83,6 @@ const ExperianCreditReport = () => {
               return;
             }
             setCreditReportLink(creditReportLinkk);
-
             toast.success("Credit report PDF downloaded successfully!");
           }
         } else {
@@ -216,7 +215,7 @@ const ExperianCreditReport = () => {
                 </div>
 
                 {showDropdown && reportStatus === "Success" && creditReport && (
-                  <div className="mt-4 text-left text-gray-800 space-y-2 p-4 border rounded shadow-sm">
+                  <div className="mt-0 text-left text-gray-800 space-y-2 px-4 py-2 ">
                     <div>
                       <strong>Client ID:</strong>{" "}
                       {creditReport.client_id || "No data available"}
@@ -289,7 +288,6 @@ const ExperianCreditReport = () => {
             )}
           </CardContent>
         </Card>
-        <ToastContainer />
       </div>
     </>
   );

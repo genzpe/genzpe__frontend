@@ -11,8 +11,7 @@ import { Input } from "@/components/ui/input";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
 import axios from "axios";
@@ -33,7 +32,7 @@ const Login = () => {
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
+  const { login, setApiKey, setToken, setEmail } = useContext(AuthContext);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -58,14 +57,20 @@ const Login = () => {
             withCredentials: true, // Ensures cookies are sent and received
           }
         );
-
-        toast.success(`${response.data.message}`);
-        setLoading(false);
-
-        login("success"); // Assuming `login` updates the auth state
-        setTimeout(() => {
-          navigate("/home");
-        }, 2000);
+        if (response.status === 200) {
+          setApiKey(response.data.api_key);
+          toast.success(`${response.data.message}`);
+          setLoading(false);
+          // console.log(response.data.token);
+          setToken(response.data.token);
+          setEmail(response.data.email);
+          login(response.data.token); // Assuming `login` updates the auth state
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+        } else {
+          toast.error(`Login failed: ${response.data.message}`);
+        }
       } catch (error) {
         console.error("Error:", error);
 
@@ -88,7 +93,6 @@ const Login = () => {
 
   return (
     <>
-      <ToastContainer />
       {loading && <AuthLoader />}
 
       <div className="relative w-full h-fit flex  justify-between  overflow-hidden">

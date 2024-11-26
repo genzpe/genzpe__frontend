@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { AuthContext } from "@/context/AuthContext";
 import axios from "axios";
 import Loader from "@/components/ui/Loader";
@@ -47,7 +46,6 @@ const Home = () => {
 
   return (
     <>
-      <ToastContainer />
       {loading && <Loader />}
 
       <div className="relative w-full h-full p-5 flex justify-center">
@@ -67,7 +65,6 @@ const Home = () => {
             </Button>
           </CardContent>
         </Card>
-        <ToastContainer />
       </div>
     </>
   );

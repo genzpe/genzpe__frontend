@@ -6,8 +6,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import { FaChevronDown } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import {  toast } from "react-toastify";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { AuthContext } from "@/context/AuthContext";
 import Loader from "../ui/Loader";
@@ -24,7 +23,7 @@ const AadhaarVerification = () => {
   const [verificationStatus, setVerificationStatus] = useState(null);
   const [aadhaarDetails, setAadhaarDetails] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const { loading, setLoading } = useContext(AuthContext);
+  const { loading, setLoading, api_key } = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {
@@ -42,7 +41,7 @@ const AadhaarVerification = () => {
           },
           {
             headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_MY_API_KEY}`,
+              Authorization: `Bearer ${api_key}`,
               "Content-Type": "application/json",
             },
           }
@@ -142,7 +141,7 @@ const AadhaarVerification = () => {
                 {showDropdown &&
                   verificationStatus === "Success" &&
                   aadhaarDetails && (
-                    <div className="mt-4 text-left text-gray-800 space-y-2 p-4">
+                    <div className="mt-0 text-left text-gray-800 space-y-2 px-4 py-2 ">
                       <div>
                         <strong>Client ID:</strong> {aadhaarDetails.client_id}
                       </div>
@@ -173,7 +172,6 @@ const AadhaarVerification = () => {
             )}
           </CardContent>
         </Card>
-        <ToastContainer />
       </div>
     </>
   );

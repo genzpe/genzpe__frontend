@@ -22,6 +22,7 @@ import BankAccountVerification from "./components/eKYC/BankAccountVerification";
 import ItrVerification from "./components/eKYC/ItrVerification";
 import EquifaxCreditReport from "./components/Credit Reports/Equifax";
 import ExperianCreditReport from "./components/Credit Reports/Experian";
+import ApiManage from "./pages/ApiManage";
 
 const App = () => {
   const { isAuthenticated, isPasswordResetInitiated } = useContext(AuthContext);
@@ -168,6 +169,18 @@ const AppRoutes = ({ isAuthenticated, isPasswordResetInitiated }) => {
             </AuthenticatedLayout>
           ) : (
             <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/manage-api-key"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <ApiManage />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/" />
           )
         }
       />

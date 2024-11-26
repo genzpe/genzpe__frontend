@@ -11,8 +11,7 @@ import { Input } from "@/components/ui/input";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { FaChevronDown } from "react-icons/fa";
 import { AuthContext } from "@/context/AuthContext";
 import Loader from "../ui/Loader";
@@ -50,7 +49,7 @@ const EquifaxCreditReport = () => {
   const [htmlReport, setHtmlReport] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { loading, setLoading } = useContext(AuthContext);
+  const { loading, setLoading, api_key } = useContext(AuthContext);
 
   const printRef = useRef();
 
@@ -72,7 +71,7 @@ const EquifaxCreditReport = () => {
       try {
         setLoading(true);
         const payload = {
-          api_key: `${import.meta.env.VITE_MY_API_KEY}`,
+          api_key: { api_key },
           type: "EQCR",
           response_type: values.responseType,
           eqreporttype: "",
@@ -92,7 +91,7 @@ const EquifaxCreditReport = () => {
           payload,
           {
             headers: {
-              Authorization: `Bearer ${import.meta.env.VITE_MY_API_KEY}`,
+              Authorization: `Bearer ${api_key}`,
               "Content-Type": "application/json",
             },
           }
@@ -373,7 +372,7 @@ const EquifaxCreditReport = () => {
                 {showDropdown && reportStatus === "Success" && (
                   <>
                     {creditReport && (
-                      <div className="mt-4 text-left text-gray-800 space-y-4 p-4 ">
+                      <div className="mt-0 text-left text-gray-800 space-y-2 px-4 py-2 ">
                         <div>
                           <strong>Client ID:</strong>{" "}
                           {creditReport.client_id || "No data available"}
@@ -482,7 +481,6 @@ const EquifaxCreditReport = () => {
             )}
           </CardContent>
         </Card>
-        <ToastContainer />
       </div>
     </>
   );

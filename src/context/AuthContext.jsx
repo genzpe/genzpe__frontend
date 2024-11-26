@@ -7,6 +7,9 @@ export const AuthProvider = ({ children }) => {
   const [isPasswordResetInitiated, setIsPasswordResetInitiated] =
     useState(false);
   const [loading, setLoading] = useState(false);
+  const [api_key, setApiKey] = useState(null);
+  const [token, setToken] = useState(null);
+  const [email, setEmail] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -38,7 +41,13 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         loading,
+        email,
+        setEmail,
         setLoading,
+        api_key,
+        setApiKey,
+        token,
+        setToken,
       }}
     >
       {children}

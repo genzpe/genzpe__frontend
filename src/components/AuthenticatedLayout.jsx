@@ -2,13 +2,12 @@ import { AuthContext } from "@/context/AuthContext";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { FiMenu, FiX, FiGrid } from "react-icons/fi";
+import { FiGrid } from "react-icons/fi";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import logoImage from "../assets/logoImage.png";
 import { CgProfile } from "react-icons/cg";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { RxQuestionMarkCircled } from "react-icons/rx";
 
@@ -25,12 +24,7 @@ const AuthenticatedLayout = ({ children }) => {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
-  // const [activeDropdown, setActiveDropdown] = useState(null); // Active dropdown state
   const [nestedDropdown, setNestedDropdown] = useState(null); // Nested dropdown state
-  // const handleDropdown = (menu) => {
-  //   setActiveDropdown(activeDropdown === menu ? null : menu);
-  //   setNestedDropdown(null); // Reset nested dropdowns when main dropdown changes
-  // };
 
   const handleNestedDropdown = (menu) => {
     setNestedDropdown(nestedDropdown === menu ? null : menu);
@@ -54,9 +48,10 @@ const AuthenticatedLayout = ({ children }) => {
         }
       );
 
-      // console.log("Logout:", response.data);
+      logout();
       toast.success("Logout successful");
-      logout(); // Call the logout function from your context or auth handler
+
+      // Call the logout function from your context or auth handler
     } catch (error) {
       console.error("Error:", error);
       if (error.response) {
@@ -74,7 +69,6 @@ const AuthenticatedLayout = ({ children }) => {
 
   return (
     <>
-      <ToastContainer />
       <div className="h-screen">
         {/* Navbar */}
         <nav
@@ -138,10 +132,19 @@ const AuthenticatedLayout = ({ children }) => {
                     {/* Profile Dropdown Menu */}
                     {isDropdownOpen && (
                       <div
+                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-lg shadow-lg dark:bg-gray-800"
                         aria-labelledby="dropdown-user"
                       >
                         <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
+                          <li>
+                            <Link
+                              to="/manage-api-key"
+                              className="block px-4 py-2 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                            >
+                              Your Api Key
+                            </Link>
+                          </li>
                           <li>
                             <Link
                               to="#"

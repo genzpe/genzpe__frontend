@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -69,7 +68,6 @@ const ForgotPassword = () => {
 
   return (
     <>
-      <ToastContainer />
       {loading && <AuthLoader />}
 
       <div className="relative w-full h-fit flex  justify-between  overflow-hidden ">

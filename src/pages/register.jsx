@@ -11,8 +11,7 @@ import { Input } from "@/components/ui/input";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
 import sidebackground from "../assets/sideBackgroundAuth.png";
@@ -39,7 +38,8 @@ const validationSchema = yup.object({
 
 const Register = () => {
   const navigate = useNavigate();
-  const { login, loading, setLoading } = useContext(AuthContext);
+  const { login, loading, setLoading, setApiKey, setToken, setEmail } =
+    useContext(AuthContext);
 
   // State for toggling password visibility
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -51,6 +51,7 @@ const Register = () => {
       email: "",
       password: "",
       confirmPassword: "",
+      apikey: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -69,7 +70,11 @@ const Register = () => {
 
         if (response.status === 200) {
           toast.success(`${result.message}`);
-          login("success");
+          login(response.data.token);
+          setToken(response.data.token);
+          setApiKey(response.data.apikey);
+          setEmail(response.data.email);
+
           setTimeout(() => {
             navigate("/");
           }, 2000);
@@ -88,7 +93,6 @@ const Register = () => {
 
   return (
     <>
-      <ToastContainer position="top-right" autoClose={2000} />
       {loading && <AuthLoader />}
       <div className="relative w-full h-fit flex justify-between overflow-hidden">
         <img
@@ -202,6 +206,24 @@ const Register = () => {
                       {formik.errors.confirmPassword}
                     </div>
                   )}
+              </div>
+              {/* Api key */}
+              <div className="w-full max-w-lg mb-4">
+                <Input
+                  id="apikey"
+                  name="apikey"
+                  type="apikey"
+                  placeholder="Enter Api Key"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.apikey}
+                  className="w-full"
+                />
+                {formik.touched.apikey && formik.errors.apikey && (
+                  <div className="text-red-500 text-sm mt-2">
+                    {formik.errors.apikey}
+                  </div>
+                )}
               </div>
 
               {/* Submit Button */}
