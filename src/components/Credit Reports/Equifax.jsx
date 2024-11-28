@@ -74,7 +74,7 @@ const EquifaxCreditReport = () => {
           api_key: { api_key },
           type: "EQCR",
           response_type: values.responseType,
-          eqreporttype: "",
+          eqreporttype: "IDCR",
           FirstName: values.firstName,
           MiddleName: values.middleName,
           LastName: values.lastName,
@@ -96,6 +96,7 @@ const EquifaxCreditReport = () => {
             },
           }
         );
+        console.log(response);
         setLoading(false);
         if (response.data) {
           if (payload.response_type === "JSON" && response.data.success) {
@@ -440,14 +441,8 @@ const EquifaxCreditReport = () => {
 
                     {/* Modal for HTML Report */}
                     {isModalOpen && htmlReport && (
-                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                      <div className="fixed overflow-auto  inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50">
                         <div className="bg-white rounded-lg p-6 max-w-4xl w-full">
-                          {/* <div className="flex justify-between items-center border-b pb-4">
-                            <h2 className="text-xl font-semibold">
-                            HTML Credit Report
-                          </h2>
-                         
-                          </div> */}
                           <div
                             ref={printRef}
                             className="mt-4 overflow-y-auto"

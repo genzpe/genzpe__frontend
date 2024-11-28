@@ -245,7 +245,7 @@ const Register = () => {
             <div className="mt-4 text-center">
               <span>Already have an account?</span>
               <span
-                className="ml-2 text-base text-[#15274F] cursor-pointer font-semibold"
+                className="ml-2 text-sm text-[#15274F] cursor-pointer font-semibold"
                 onClick={() => navigate("/login")}
               >
                 Login here

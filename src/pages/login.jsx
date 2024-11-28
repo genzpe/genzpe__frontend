@@ -188,7 +188,7 @@ const Login = () => {
             <div className="flex flex-row">
               <div className="mt-4 mr-5">Are you a new user?</div>
               <div
-                className="mt-4 text-base font-semibold cursor-pointer"
+                className="mt-4 text-sm font-semibold cursor-pointer"
                 style={{ color: "#15274F", transition: "color 0.3s" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#15274F")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "#15274F")}

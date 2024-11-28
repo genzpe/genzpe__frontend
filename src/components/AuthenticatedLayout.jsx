@@ -10,6 +10,7 @@ import { CgProfile } from "react-icons/cg";
 import { toast } from "react-toastify";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { RxQuestionMarkCircled } from "react-icons/rx";
+import { FaArrowRightToBracket } from "react-icons/fa6";
 
 const AuthenticatedLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -156,7 +157,7 @@ const AuthenticatedLayout = ({ children }) => {
                           <li>
                             <Button
                               onClick={handleLogout}
-                              className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mt-4 bg-gray-800"
+                              className="md:hidden inline-block w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mt-4 bg-gray-800"
                             >
                               Logout
                             </Button>
@@ -164,6 +165,17 @@ const AuthenticatedLayout = ({ children }) => {
                         </ul>
                       </div>
                     )}
+                  </div>
+                  <div>
+                    <Button
+                      onClick={handleLogout}
+                      className="w-fit sm:inline-block hidden max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg bg-[#050D2D]"
+                    >
+                      <span className="flex items-center justify-around text-base">
+                        LogOut{" "}
+                        <FaArrowRightToBracket className="ml-1 text-xl" />
+                      </span>
+                    </Button>
                   </div>
                 </div>
               </div>
