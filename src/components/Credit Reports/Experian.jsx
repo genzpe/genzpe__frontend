@@ -221,7 +221,7 @@ const ExperianCreditReport = () => {
                   reportStatus === "Success" &&
                   isModalCreditOpen &&
                   creditReport && (
-                    <div className="fixed inset-0 opacity-50 z-50 top-24 mx-auto flex items-center justify-center px-4 py-6">
+                    <div className="fixed  inset-0 bg-black bg-opacity-50 z-50 top-24 mx-auto flex items-center justify-center px-4 py-6">
                       <div className="relative max-w-4xl w-full h-auto bg-white rounded-lg overflow-hidden">
                         <JSONPretty
                           className="rounded-lg w-full h-[80vh] overflow-auto "

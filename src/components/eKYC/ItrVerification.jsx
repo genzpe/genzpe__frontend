@@ -36,6 +36,7 @@ const ItrVerification = () => {
     onSubmit: async (values) => {
       try {
         setLoading(true);
+        debugger;
         const response = await axios.post(
           `${import.meta.env.VITE_APP_BACKEND_URL}/ekyc-verification`,
           {
@@ -139,25 +140,59 @@ const ItrVerification = () => {
                 {showDropdown &&
                   verificationStatus === "Success" &&
                   itrDetails && (
-                    <div className="mt-0 text-left text-gray-800 space-y-2 px-4 py-2 ">
+                    <div className="mt-0 text-left text-gray-800 space-y-2 px-4 py-2">
+                      {/* Displaying PAN Number */}
                       <div>
-                        <strong>PAN Number:</strong> {itrDetails.pan || "N/A"}
+                        <strong>PAN Number:</strong>{" "}
+                        {itrDetails.pan_number || "N/A"}
                       </div>
+
+                      {/* Displaying PAN Status */}
                       <div>
-                        <strong>Assessment Year:</strong>{" "}
-                        {itrDetails.assessment_year || "N/A"}
+                        <strong>PAN Status:</strong>{" "}
+                        {itrDetails.pan_status || "N/A"}
                       </div>
+
+                      {/* Displaying Client ID */}
                       <div>
-                        <strong>Filing Status:</strong>{" "}
-                        {itrDetails.filing_status || "N/A"}
+                        <strong>Client ID:</strong>{" "}
+                        {itrDetails.client_id || "N/A"}
                       </div>
+
+                      {/* Displaying Compliant Status */}
                       <div>
-                        <strong>ITR Type:</strong>{" "}
-                        {itrDetails.itr_type || "N/A"}
+                        <strong>Compliant:</strong>{" "}
+                        {itrDetails.compliant ? "Yes" : "No"}
                       </div>
+
+                      {/* Displaying Masked Name */}
                       <div>
-                        <strong>Verification Status:</strong>{" "}
-                        {itrDetails.is_verified ? "Verified" : "Not Verified"}
+                        <strong>Masked Name:</strong>{" "}
+                        {itrDetails.masked_name || "N/A"}
+                      </div>
+
+                      {/* Displaying PAN-Aadhaar Linked Status */}
+                      <div>
+                        <strong>PAN-Aadhaar Linked:</strong>{" "}
+                        {itrDetails.pan_aadhaar_linked || "N/A"}
+                      </div>
+
+                      {/* Displaying PAN Allotment Date */}
+                      <div>
+                        <strong>PAN Allotment Date:</strong>{" "}
+                        {itrDetails.pan_allotment_date || "N/A"}
+                      </div>
+
+                      {/* Displaying Specified Person under Section 206 */}
+                      <div>
+                        <strong>Specified Person under Section 206:</strong>{" "}
+                        {itrDetails.specified_person_under_206 || "N/A"}
+                      </div>
+
+                      {/* Displaying Valid PAN Status */}
+                      <div>
+                        <strong>Valid PAN:</strong>{" "}
+                        {itrDetails.valid_pan ? "Yes" : "No"}
                       </div>
                     </div>
                   )}

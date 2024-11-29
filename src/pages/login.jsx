@@ -182,8 +182,8 @@ const Login = () => {
                 Submit
               </Button>
             </form>
-            <div className="flex flex-row items-center justify-start mt-4 text-base">
-              <div className=" mr-3 ">Are you a new user?</div>
+            <div className="flex flex-row items-center justify-start mt-4 text-sm">
+              <div className=" mr-1 ">Are you a new user?</div>
               <div
                 className="font-semibold  cursor-pointer"
                 style={{ color: "#15274F", transition: "color 0.3s" }}

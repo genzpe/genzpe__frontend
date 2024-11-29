@@ -34,6 +34,7 @@ const validationSchema = yup.object({
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .required("Confirm Password is required"),
+  apikey: yup.string().required("API Key is required"),
 });
 
 // Updated Register component
@@ -255,10 +256,10 @@ const Register = () => {
             </form>
 
             {/* Redirect to Login */}
-            <div className="mt-4 text-center text-base">
+            <div className="mt-4 text-center text-sm">
               <span>Already have an account?</span>
               <span
-                className="ml-2 text-[#15274F] cursor-pointer font-semibold"
+                className="ml-1 text-[#15274F] cursor-pointer font-semibold"
                 onClick={() => navigate("/login")}
               >
                 Login here
