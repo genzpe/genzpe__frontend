@@ -10,7 +10,7 @@ import Loader from "@/components/ui/Loader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ApiManage = () => {
-  const { email, api_key, loading, setLoading, setApiKey } =
+  const { loading, email, setLoading, setApiKey, api_key } =
     useContext(AuthContext);
 
   // Formik for form handling
@@ -28,9 +28,10 @@ const ApiManage = () => {
         const response = await axios.put(
           `${import.meta.env.VITE_APP_BACKEND_URL}/auth/update-apikey`,
           {
-            email, // Send email from the context
+            email,
             api_key: values.apiKey,
-          }
+          },
+          { withCredentials: true }
         );
         setLoading(false);
         if (response.status === 200) {
@@ -81,7 +82,8 @@ const ApiManage = () => {
 
               <Button
                 type="submit"
-                className="w-full max-w-sm bg-gray-200 text-gray-600 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50"
+                className="w-full max-w-sm bg-gray-200 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50"
+                style={{ backgroundColor: "#15274F" }}
               >
                 Update API Key
               </Button>

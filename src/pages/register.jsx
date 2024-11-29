@@ -36,6 +36,7 @@ const validationSchema = yup.object({
     .required("Confirm Password is required"),
 });
 
+// Updated Register component
 const Register = () => {
   const navigate = useNavigate();
   const { login, loading, setLoading, setApiKey, setToken, setEmail } =
@@ -72,7 +73,7 @@ const Register = () => {
           toast.success(`${result.message}`);
           login(response.data.token);
           setToken(response.data.token);
-          setApiKey(response.data.apikey);
+          setApiKey(response.data.api_key);
           setEmail(response.data.email);
 
           setTimeout(() => {
@@ -94,20 +95,28 @@ const Register = () => {
   return (
     <>
       {loading && <AuthLoader />}
-      <div className="relative w-full h-fit flex justify-between overflow-hidden">
+      <div className="relative w-full flex justify-between overflow-hidden min-h-screen ">
         <img
           src={sidebackground}
           alt="BackgroundImage"
-          className="hidden md:inline-block md:max-w-[45%] max-h-[100vh]"
+          className="hidden md:inline-block md:max-w-[45%] max-h-[100vh] object-cover"
         />
-        <Card className="h-full mt-20 mx-auto w-full md:w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl md:px-20 rounded-none border-none">
+        <Card
+          className={`h-full mt-20 mx-auto w-full md:w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl md:px-20 rounded-none border-none overflow-hidden ${
+            formik.errors.name && formik.errors.email
+              ? `sm:mt-0 sm:overflow-hidden`
+              : ``
+          } `}
+        >
           <CardHeader>
             <img
               src={logoImage}
               className="m-auto w-[101px] h-[46px]"
               alt="Genzype"
             />
-            <CardTitle className="text-center text-2xl">Welcome!</CardTitle>
+            <CardTitle className="text-center font-semibold mt-1">
+              Welcome!
+            </CardTitle>
             <CardDescription className="text-center text-base">
               Register to start your journey
             </CardDescription>
@@ -119,7 +128,6 @@ const Register = () => {
             >
               {/* Name Input */}
               <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-4">
-                {" "}
                 <Input
                   id="name"
                   name="name"
@@ -131,7 +139,7 @@ const Register = () => {
                   className="w-full"
                 />
                 {formik.touched.name && formik.errors.name && (
-                  <div className="text-red-500 text-sm mt-2">
+                  <div className="text-red-500 text-sm mt-1">
                     {formik.errors.name}
                   </div>
                 )}
@@ -139,7 +147,6 @@ const Register = () => {
 
               {/* Email Input */}
               <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-4">
-                {" "}
                 <Input
                   id="email"
                   name="email"
@@ -151,7 +158,7 @@ const Register = () => {
                   className="w-full"
                 />
                 {formik.touched.email && formik.errors.email && (
-                  <div className="text-red-500 text-sm mt-2">
+                  <div className="text-red-500 text-sm mt-1">
                     {formik.errors.email}
                   </div>
                 )}
@@ -159,7 +166,6 @@ const Register = () => {
 
               {/* Password Input */}
               <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg relative mb-4">
-                {" "}
                 <Input
                   id="password"
                   name="password"
@@ -171,13 +177,17 @@ const Register = () => {
                   className="w-full"
                 />
                 <div
-                  className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                  className={`absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-black ${
+                    formik.touched.password && formik.errors.password
+                      ? "pb-6"
+                      : ""
+                  }`}
                   onClick={() => setPasswordVisible(!passwordVisible)}
                 >
                   {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                 </div>
                 {formik.touched.password && formik.errors.password && (
-                  <div className="text-red-500 text-sm mt-2">
+                  <div className="text-red-500 text-sm mt-1">
                     {formik.errors.password}
                   </div>
                 )}
@@ -185,7 +195,6 @@ const Register = () => {
 
               {/* Confirm Password Input */}
               <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg relative mb-4">
-                {" "}
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -197,7 +206,12 @@ const Register = () => {
                   className="w-full"
                 />
                 <div
-                  className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                  className={`absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-black ${
+                    formik.touched.confirmPassword &&
+                    formik.errors.confirmPassword
+                      ? "pb-6"
+                      : ""
+                  }`}
                   onClick={() =>
                     setConfirmPasswordVisible(!confirmPasswordVisible)
                   }
@@ -206,14 +220,13 @@ const Register = () => {
                 </div>
                 {formik.touched.confirmPassword &&
                   formik.errors.confirmPassword && (
-                    <div className="text-red-500 text-sm mt-2">
+                    <div className="text-red-500 text-sm mt-1">
                       {formik.errors.confirmPassword}
                     </div>
                   )}
               </div>
               {/* Api key */}
               <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-4">
-                {" "}
                 <Input
                   id="apikey"
                   name="apikey"
@@ -225,7 +238,7 @@ const Register = () => {
                   className="w-full"
                 />
                 {formik.touched.apikey && formik.errors.apikey && (
-                  <div className="text-red-500 text-sm mt-2">
+                  <div className="text-red-500 text-sm mt-1">
                     {formik.errors.apikey}
                   </div>
                 )}
@@ -242,10 +255,10 @@ const Register = () => {
             </form>
 
             {/* Redirect to Login */}
-            <div className="mt-4 text-center">
+            <div className="mt-4 text-center text-base">
               <span>Already have an account?</span>
               <span
-                className="ml-2 text-sm text-[#15274F] cursor-pointer font-semibold"
+                className="ml-2 text-[#15274F] cursor-pointer font-semibold"
                 onClick={() => navigate("/login")}
               >
                 Login here

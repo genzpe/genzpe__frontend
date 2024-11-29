@@ -12,7 +12,8 @@ import { Link } from "react-router-dom";
 import Loader from "../ui/Loader";
 import { AuthContext } from "@/context/AuthContext";
 import { FaArrowRightLong } from "react-icons/fa6";
-
+import JSONPretty from "react-json-pretty";
+import "react-json-pretty/themes/monikai.css";
 // Validation schema
 const validationSchema = yup.object({
   name: yup.string().required("Name is required"),
@@ -36,6 +37,7 @@ const ExperianCreditReport = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [creditReportLink, setCreditReportLink] = useState(null);
   const { loading, setLoading, api_key } = useContext(AuthContext);
+  const [isModalCreditOpen, setIsModalCreditOpen] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -60,12 +62,7 @@ const ExperianCreditReport = () => {
         const response = await axios.post(
           `${import.meta.env.VITE_APP_BACKEND_URL}/experian`,
           payload,
-          {
-            headers: {
-              Authorization: `Bearer ${api_key}`,
-              "Content-Type": "application/json",
-            },
-          }
+          { withCredentials: true }
         );
         setLoading(false);
 
@@ -148,17 +145,19 @@ const ExperianCreditReport = () => {
                 <label className="block mb-2 font-semibold text-sm text-gray-700">
                   File Type
                 </label>
-                <select
-                  id="fType"
-                  name="fType"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.fType}
-                  className="w-full p-3 border rounded-md"
-                >
-                  <option value="JSON">JSON</option>
-                  <option value="PDF">PDF</option>
-                </select>
+                <div className="border w-full rounded-md">
+                  <select
+                    id="fType"
+                    name="fType"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.fType}
+                    className="w-[96%] p-3 outline-none "
+                  >
+                    <option value="JSON">JSON</option>
+                    <option value="PDF">PDF</option>
+                  </select>
+                </div>
                 {formik.touched.fType && formik.errors.fType ? (
                   <div className="text-red-500 text-sm mt-2">
                     {formik.errors.fType}
@@ -168,11 +167,12 @@ const ExperianCreditReport = () => {
 
               <Button
                 type="submit"
-                className={`w-full max-w-sm bg-white-700 text-gray-400 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50 ${
+                className={`w-full max-w-sm bg-white-700 text-white py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50 ${
                   creditReportLink
                     ? `bg-green-600 hover:bg-green-500 text-white`
                     : ""
                 } `}
+                style={{ backgroundColor: "#15274F" }}
               >
                 {creditReportLink ? (
                   <Link
@@ -207,83 +207,39 @@ const ExperianCreditReport = () => {
                     </span>
                   </div>
                   <FaChevronDown
-                    onClick={() => setShowDropdown(!showDropdown)}
+                    onClick={() => {
+                      setShowDropdown(!showDropdown);
+                      setIsModalCreditOpen(!!creditReport);
+                    }}
                     className={`ml-2 transition-transform cursor-pointer ${
                       showDropdown ? "rotate-180" : ""
                     }`}
                   />
                 </div>
 
-                {showDropdown && reportStatus === "Success" && creditReport && (
-                  <div className="mt-0 text-left text-gray-800 space-y-2 px-4 py-2 ">
-                    <div>
-                      <strong>Client ID:</strong>{" "}
-                      {creditReport.client_id || "No data available"}
+                {showDropdown &&
+                  reportStatus === "Success" &&
+                  isModalCreditOpen &&
+                  creditReport && (
+                    <div className="fixed inset-0 opacity-50 z-50 top-24 mx-auto flex items-center justify-center px-4 py-6">
+                      <div className="relative max-w-4xl w-full h-auto bg-white rounded-lg overflow-hidden">
+                        <JSONPretty
+                          className="rounded-lg w-full h-[80vh] overflow-auto "
+                          id="json-pretty"
+                          data={creditReport}
+                        />
+                        <button
+                          onClick={() => {
+                            setShowDropdown(!showDropdown);
+                            setIsModalOpen(false);
+                          }}
+                          className="absolute bottom-4 md:right-10 right-4 z-100 bg-white text-blue-500 hover:text-gray-800 rounded-lg p-2"
+                        >
+                          Close
+                        </button>
+                      </div>
                     </div>
-                    <div>
-                      <strong>Name:</strong>{" "}
-                      {creditReport.name || "No data available"}
-                    </div>
-                    <div>
-                      <strong>Mobile:</strong>{" "}
-                      {creditReport.mobile || "No data available"}
-                    </div>
-                    <div>
-                      <strong>PAN:</strong>{" "}
-                      {creditReport.pan || "No data available"}
-                    </div>
-                    <div>
-                      <strong>Credit Score:</strong>{" "}
-                      {creditReport.credit_score || "No data available"}
-                    </div>
-                    <div>
-                      <strong>Report Date:</strong>{" "}
-                      {creditReport.credit_report.CreditProfileHeader
-                        ?.ReportDate
-                        ? new Intl.DateTimeFormat("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          }).format(
-                            new Date(
-                              creditReport.credit_report.CreditProfileHeader.ReportDate
-                            )
-                          )
-                        : "No data available"}
-                    </div>
-                    <div>
-                      <strong>Report Time:</strong>{" "}
-                      {creditReport.credit_report.CreditProfileHeader
-                        ?.ReportTime
-                        ? new Intl.DateTimeFormat("en-US", {
-                            hour: "numeric",
-                            minute: "numeric",
-                            second: "numeric",
-                            hour12: true,
-                          }).format(
-                            new Date(
-                              creditReport.credit_report.CreditProfileHeader.ReportTime
-                            )
-                          )
-                        : "No data available"}
-                    </div>
-
-                    <div>
-                      <strong>Report Number:</strong>{" "}
-                      {creditReport.credit_report.CreditProfileHeader
-                        ?.ReportNumber || "No data available"}
-                    </div>
-                    {/* <div>
-                    <strong>FCI Score:</strong>{" "}
-                    {creditReport.SCORE?.FCIREXScore || "No data available"}
-                  </div> */}
-                    <div>
-                      <strong>Total CAPS Last 7 Days:</strong>{" "}
-                      {creditReport.credit_report.TotalCAPS_Summary
-                        ?.TotalCAPSLast7Days || "No data available"}
-                    </div>
-                  </div>
-                )}
+                  )}
               </div>
             )}
           </CardContent>

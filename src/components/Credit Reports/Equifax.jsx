@@ -17,7 +17,8 @@ import { AuthContext } from "@/context/AuthContext";
 import Loader from "../ui/Loader";
 import { formatCreditReport, handlePrint } from "@/lib/formatCreditReport";
 import { FaArrowRightLong } from "react-icons/fa6";
-// import ReportView from "./ReportView";
+import JSONPretty from "react-json-pretty";
+import "react-json-pretty/themes/monikai.css";
 
 // Validation schema
 const validationSchema = yup.object({
@@ -49,7 +50,8 @@ const EquifaxCreditReport = () => {
   const [htmlReport, setHtmlReport] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { loading, setLoading, api_key } = useContext(AuthContext);
+  const [isModalCreditOpen, setIsModalCreditOpen] = useState(false);
+  const { loading, setLoading } = useContext(AuthContext);
 
   const printRef = useRef();
 
@@ -71,10 +73,8 @@ const EquifaxCreditReport = () => {
       try {
         setLoading(true);
         const payload = {
-          api_key: { api_key },
           type: "EQCR",
           response_type: values.responseType,
-          eqreporttype: "IDCR",
           FirstName: values.firstName,
           MiddleName: values.middleName,
           LastName: values.lastName,
@@ -89,20 +89,14 @@ const EquifaxCreditReport = () => {
         const response = await axios.post(
           `${import.meta.env.VITE_APP_BACKEND_URL}/equifax`,
           payload,
-          {
-            headers: {
-              Authorization: `Bearer ${api_key}`,
-              "Content-Type": "application/json",
-            },
-          }
+          { withCredentials: true }
         );
-        console.log(response);
         setLoading(false);
         if (response.data) {
           if (payload.response_type === "JSON" && response.data.success) {
             setReportStatus("Success");
             setHtmlReport(null);
-            setCreditReport(response.data.data.response || {});
+            setCreditReport(response.data.data || {});
             toast.success(
               response.data.message || "Credit report fetched successfully!"
             );
@@ -243,7 +237,7 @@ const EquifaxCreditReport = () => {
                   id="state"
                   name="state"
                   type="text"
-                  placeholder="State"
+                  placeholder="(e.g MP, UP etc...)"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.state}
@@ -316,17 +310,19 @@ const EquifaxCreditReport = () => {
                 >
                   Response Type
                 </label>
-                <select
-                  id="responseType"
-                  name="responseType"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.responseType}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
-                >
-                  <option value="JSON">JSON</option>
-                  <option value="HTML">HTML</option>
-                </select>
+                <div className="border w-full rounded-md">
+                  <select
+                    id="responseType"
+                    name="responseType"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.responseType}
+                    className="w-[96%] p-3 outline-none "
+                  >
+                    <option value="JSON">JSON</option>
+                    <option value="HTML">HTML</option>
+                  </select>
+                </div>
                 {formik.touched.responseType && formik.errors.responseType ? (
                   <div className="text-red-500 text-sm mt-2">
                     {formik.errors.responseType}
@@ -336,7 +332,8 @@ const EquifaxCreditReport = () => {
 
               <Button
                 type="submit"
-                className="w-full max-w-sm bg-white-700 text-gray-400 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50"
+                className="w-full max-w-sm bg-white-700 text-white py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50"
+                style={{ backgroundColor: "#15274F" }}
               >
                 Fetch Credit Report
               </Button>
@@ -344,7 +341,7 @@ const EquifaxCreditReport = () => {
 
             {/* Display Credit Report Result */}
             {reportStatus && (
-              <div className="absolute bottom-0 w-full bg-green-100 rounded-md flex flex-col items-start">
+              <div className="absolute overflow-auto bottom-0 w-full bg-green-100 rounded-md flex flex-col items-start">
                 <div className="text-base font-semibold border-y-2 border-gray-300 px-4 py-2 flex items-center justify-between w-full">
                   <div className="flex items-center text-base w-fit">
                     Status
@@ -362,6 +359,7 @@ const EquifaxCreditReport = () => {
                   <FaChevronDown
                     onClick={() => {
                       setShowDropdown(!showDropdown);
+                      setIsModalCreditOpen(!!creditReport);
                       setIsModalOpen(!!htmlReport); // Use !! to coerce htmlReport into a boolean
                     }}
                     className={`ml-2 transition-transform cursor-pointer ${
@@ -372,69 +370,25 @@ const EquifaxCreditReport = () => {
 
                 {showDropdown && reportStatus === "Success" && (
                   <>
-                    {creditReport && (
-                      <div className="mt-0 text-left text-gray-800 space-y-2 px-4 py-2 ">
-                        <div>
-                          <strong>Client ID:</strong>{" "}
-                          {creditReport.client_id || "No data available"}
-                        </div>
-                        <div>
-                          <strong>Name:</strong>{" "}
-                          {creditReport.name || "No data available"}
-                        </div>
-                        <div>
-                          <strong>Date of Birth:</strong>{" "}
-                          {creditReport.dob || "No data available"}
-                        </div>
-                        <div>
-                          <strong>Address:</strong>{" "}
-                          {creditReport.address || "No data available"}
-                        </div>
-                        <div>
-                          <strong>Phone Number:</strong>{" "}
-                          {creditReport.phone || "No data available"}
-                        </div>
-                        <div>
-                          <strong>Email:</strong>{" "}
-                          {creditReport.email || "No data available"}
-                        </div>
-                        <div>
-                          <strong>Credit Score:</strong>{" "}
-                          {creditReport.credit_score || "No data available"}
-                        </div>
-                        <div>
-                          <strong>Inquiry Purpose:</strong>{" "}
-                          {creditReport.inquiry_purpose || "No data available"}
-                        </div>
-                        <div>
-                          <strong>Account Details:</strong>{" "}
-                          {creditReport.account_details ? (
-                            <ul className="list-disc pl-5">
-                              {creditReport.account_details.map(
-                                (account, index) => (
-                                  <li key={index}>
-                                    {account.type}: {account.balance}
-                                  </li>
-                                )
-                              )}
-                            </ul>
-                          ) : (
-                            "No data available"
-                          )}
-                        </div>
-                        <div>
-                          <strong>Enquiries:</strong>{" "}
-                          {creditReport.enquiries ? (
-                            <ul className="list-disc pl-5">
-                              {creditReport.enquiries.map((enquiry, index) => (
-                                <li key={index}>
-                                  {enquiry.date} - {enquiry.purpose}
-                                </li>
-                              ))}
-                            </ul>
-                          ) : (
-                            "No data available"
-                          )}
+                    {/* {creditReport &&
+                      JSON.stringify(creditReport, undefined, 10)} */}
+                    {isModalCreditOpen && creditReport && (
+                      <div className="fixed inset-0 opacity-50  z-50 top-24 mx-auto flex items-center justify-center px-4 py-6">
+                        <div className="relative max-w-4xl w-full h-auto bg-white rounded-lg overflow-hidden">
+                          <JSONPretty
+                            className="rounded-lg w-full h-[80vh] overflow-auto "
+                            id="json-pretty"
+                            data={creditReport}
+                          />
+                          <button
+                            onClick={() => {
+                              setShowDropdown(!showDropdown);
+                              setIsModalOpen(false);
+                            }}
+                            className="absolute bottom-4 md:right-10 right-4 z-100 bg-white text-blue-500 hover:text-gray-800 rounded-lg p-2"
+                          >
+                            Close
+                          </button>
                         </div>
                       </div>
                     )}

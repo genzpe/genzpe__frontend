@@ -316,53 +316,6 @@ const AuthenticatedLayout = ({ children }) => {
                         </ul>
                       )}
                     </li>
-                  </ul>
-                </li>
-
-                {/* Company */}
-                <li className="mt-4">
-                  <div className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-800 rounded-md">
-                    <div className="flex items-center gap-2">
-                      <FiGrid className="text-2xl" />
-                      <span className="font-medium">Company</span>
-                    </div>
-                  </div>
-                  <ul className="ml-4 mt-2 space-y-2 text-sm  border-l-2 border-[#99DE07]">
-                    <li>
-                      <div
-                        className="pl-4 flex items-center justify-start   cursor-pointer hover:bg-blue-800"
-                        onClick={() => handleNestedDropdown("masterdata")}
-                      >
-                        Master Data
-                        {nestedDropdown === "masterdata" ? (
-                          <FaChevronUp size={14} className="ml-2" />
-                        ) : (
-                          <FaChevronDown size={14} className="ml-2" />
-                        )}
-                      </div>
-                      {nestedDropdown === "masterdata" && (
-                        <ul className="ml-4 mt-2 space-y-2 text-sm border-l-2 border-[#99DE07]">
-                          <li
-                            className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/master/mca-details")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            MCA Details
-                          </li>
-                          <li
-                            className={`text-[14px] ml-1 my-3 pl-4 p-1 flex items-center justify-between  cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/masterdata/gst")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            GST
-                          </li>
-                        </ul>
-                      )}
-                    </li>
                     <li>
                       <div
                         className="pl-4 flex items-center justify-start cursor-pointer text-sm hover:bg-blue-800"
@@ -406,6 +359,53 @@ const AuthenticatedLayout = ({ children }) => {
                             }`}
                           >
                             Experian
+                          </li>
+                        </ul>
+                      )}
+                    </li>
+                  </ul>
+                </li>
+
+                {/* Company */}
+                <li className="mt-4">
+                  <div className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-800 rounded-md">
+                    <div className="flex items-center gap-2">
+                      <FiGrid className="text-2xl" />
+                      <span className="font-medium">Company</span>
+                    </div>
+                  </div>
+                  <ul className="ml-4 mt-2 space-y-2 text-sm  border-l-2 border-[#99DE07]">
+                    <li>
+                      <div
+                        className="pl-4 flex items-center justify-start   cursor-pointer hover:bg-blue-800"
+                        onClick={() => handleNestedDropdown("masterdata")}
+                      >
+                        Master Data
+                        {nestedDropdown === "masterdata" ? (
+                          <FaChevronUp size={14} className="ml-2" />
+                        ) : (
+                          <FaChevronDown size={14} className="ml-2" />
+                        )}
+                      </div>
+                      {nestedDropdown === "masterdata" && (
+                        <ul className="ml-4 mt-2 space-y-2 text-sm border-l-2 border-[#99DE07]">
+                          <li
+                            className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                              isActiveLink("/master/mca-details")
+                                ? "bg-[#99DE07] text-black rounded pl-5"
+                                : ""
+                            }`}
+                          >
+                            MCA Details
+                          </li>
+                          <li
+                            className={`text-[14px] ml-1 my-3 pl-4 p-1 flex items-center justify-between  cursor-pointer hover:bg-blue-800 ${
+                              isActiveLink("/masterdata/gst")
+                                ? "bg-[#99DE07] text-black rounded pl-5"
+                                : ""
+                            }`}
+                          >
+                            GST
                           </li>
                         </ul>
                       )}

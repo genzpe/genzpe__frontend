@@ -40,10 +40,7 @@ const PanVerification = () => {
             type: "PID",
           },
           {
-            headers: {
-              Authorization: `Bearer ${api_key}`,
-              "Content-Type": "application/json",
-            },
+            withCredentials: true,
           }
         );
         setLoading(false);
@@ -104,7 +101,8 @@ const PanVerification = () => {
 
               <Button
                 type="submit"
-                className={`w-full max-w-sm bg-white-700 text-gray-400 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50 `}
+                className={`w-full max-w-sm bg-white-700 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50 `}
+                style={{ backgroundColor: "#15274F" }}
               >
                 Submit
               </Button>

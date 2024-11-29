@@ -51,9 +51,6 @@ const Login = () => {
           `${import.meta.env.VITE_APP_BACKEND_URL}/auth/sign_in`,
           values, // Send form values directly
           {
-            headers: {
-              "Content-Type": "application/json",
-            },
             withCredentials: true, // Ensures cookies are sent and received
           }
         );
@@ -108,10 +105,10 @@ const Login = () => {
               className="m-auto w-[101px] h-[46px]"
               alt="Genzype"
             />
-            <CardTitle className="text-center font-semibold">
+            <CardTitle className="text-center font-semibold mt-1">
               Welcome Back!
             </CardTitle>
-            <CardDescription className="text-center pt-2">
+            <CardDescription className="text-center pt-1 text-base">
               Sign in now to continue your journey
             </CardDescription>
           </CardHeader>
@@ -151,7 +148,7 @@ const Login = () => {
                   className="w-full"
                 />
                 <div
-                  className={`absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-500 ${
+                  className={`absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-black ${
                     formik.touched.password && formik.errors.password
                       ? "pb-6"
                       : ""
@@ -185,10 +182,10 @@ const Login = () => {
                 Submit
               </Button>
             </form>
-            <div className="flex flex-row">
-              <div className="mt-4 mr-5">Are you a new user?</div>
+            <div className="flex flex-row items-center justify-start mt-4 text-base">
+              <div className=" mr-3 ">Are you a new user?</div>
               <div
-                className="mt-4 text-sm font-semibold cursor-pointer"
+                className="font-semibold  cursor-pointer"
                 style={{ color: "#15274F", transition: "color 0.3s" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#15274F")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "#15274F")}
