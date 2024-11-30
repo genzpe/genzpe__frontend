@@ -310,14 +310,15 @@ const EquifaxCreditReport = () => {
                 >
                   Response Type
                 </label>
-                <div className="border w-full rounded-md">
+                <div className="border w-full rounded-md bg-gray-100 text-sm px-3">
+                  {" "}
                   <select
                     id="responseType"
                     name="responseType"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.responseType}
-                    className="w-[96%] p-3 outline-none "
+                    className="w-[100%] p-2 outline-none bg-inherit"
                   >
                     <option value="JSON">JSON</option>
                     <option value="HTML">HTML</option>

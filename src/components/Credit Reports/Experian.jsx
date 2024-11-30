@@ -145,14 +145,14 @@ const ExperianCreditReport = () => {
                 <label className="block mb-2 font-semibold text-sm text-gray-700">
                   File Type
                 </label>
-                <div className="border w-full rounded-md">
+                <div className="border w-full rounded-md bg-gray-100 text-sm px-3">
                   <select
                     id="fType"
                     name="fType"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.fType}
-                    className="w-[96%] p-3 outline-none "
+                    className="w-[100%] p-2 outline-none bg-inherit "
                   >
                     <option value="JSON">JSON</option>
                     <option value="PDF">PDF</option>
