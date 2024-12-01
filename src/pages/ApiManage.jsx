@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
@@ -10,13 +10,39 @@ import Loader from "@/components/ui/Loader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const ApiManage = () => {
-  const { loading, email, setLoading, setApiKey, api_key } =
-    useContext(AuthContext);
+  const { loading, setLoading } = useContext(AuthContext);
+  const [apiKey, setApiKey] = useState("");
+
+  useEffect(() => {
+    const fetchApiKey = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_BACKEND_URL}/auth/get-api-key`,
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.data.success) {
+          toast.success("API key fetched successfully");
+
+          setApiKey(response.data.api_key);
+        }
+      } catch (err) {
+        toast.error(
+          err.response?.data?.message ||
+            "Failed to fetch API Key. Please try again."
+        );
+      }
+    };
+
+    fetchApiKey(); // Call API if email exists
+  }, []);
 
   // Formik for form handling
   const formik = useFormik({
     initialValues: {
-      apiKey: api_key || "",
+      apiKey: apiKey || "",
     },
     enableReinitialize: true, // Reinitialize the form when the API key changes
     validationSchema: yup.object({
@@ -28,7 +54,6 @@ const ApiManage = () => {
         const response = await axios.put(
           `${import.meta.env.VITE_APP_BACKEND_URL}/auth/update-apikey`,
           {
-            email,
             api_key: values.apiKey,
           },
           { withCredentials: true }
