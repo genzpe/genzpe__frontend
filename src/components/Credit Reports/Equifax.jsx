@@ -41,7 +41,7 @@ const validationSchema = yup.object({
     .string()
     .matches(/^\d{10}$/, "Mobile number must be 10 digits")
     .required("Mobile number is required"),
-  idValue: yup.string().required("ID Value is required"),
+  idValue: yup.string().required("PAN Number is required"),
 });
 
 const EquifaxCreditReport = () => {
@@ -237,7 +237,7 @@ const EquifaxCreditReport = () => {
                   id="state"
                   name="state"
                   type="text"
-                  placeholder="(e.g MP, UP etc...)"
+                  placeholder="State (e.g MP, UP etc...)"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.state}
@@ -255,7 +255,7 @@ const EquifaxCreditReport = () => {
                   id="postal"
                   name="postal"
                   type="text"
-                  placeholder="Postal Code (6 digits)"
+                  placeholder="Postal Code (e.g 453331)"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.postal}
@@ -291,7 +291,7 @@ const EquifaxCreditReport = () => {
                   id="idValue"
                   name="idValue"
                   type="text"
-                  placeholder="ID Value"
+                  placeholder="PAN Number (e.g ABCDE1234R)"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.idValue}

@@ -88,7 +88,7 @@ const ItrVerification = () => {
                   id="itrId"
                   name="itrId"
                   type="text"
-                  placeholder="Enter ITR ID"
+                  placeholder="Enter PAN Number (e.g ABCDE1234f)"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.itrId}

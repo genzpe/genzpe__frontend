@@ -18,6 +18,7 @@ import axios from "axios";
 import logoImage from "../assets/logoLogin.png";
 import sidebackground from "../assets/sideBackgroundAuth.png";
 import AuthLoader from "@/components/ui/AuthLoader";
+import { BsInfoCircle } from "react-icons/bs";
 
 const validationSchema = yup.object({
   email: yup
@@ -92,7 +93,7 @@ const Login = () => {
     <>
       {loading && <AuthLoader />}
 
-      <div className="relative w-full h-fit flex  justify-between  overflow-hidden border-none">
+      <div className="relative w-full flex justify-between overflow-hidden min-h-screen ">
         <img
           src={sidebackground}
           alt="BackgroundImage"
@@ -193,6 +194,16 @@ const Login = () => {
               >
                 Sign up here
               </div>
+            </div>
+            <div className="border-red-500 absolute bottom-2 px-2 text-center text-xs rounded-full  flex items-center justify-around">
+              <BsInfoCircle className="text-red-500" />
+
+              <p className="text-xs p-[1.5px] text-red-500 ">
+                Disclaimer:{" "}
+                <span>
+                  GenZPe is a technology provider. We don't sell any data.
+                </span>
+              </p>
             </div>
           </CardContent>
         </Card>

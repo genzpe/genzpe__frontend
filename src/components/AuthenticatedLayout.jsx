@@ -24,6 +24,7 @@ const AuthenticatedLayout = ({ children }) => {
   // Toggle sidebar visibility
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+    setIsDropdownOpen(false);
   };
   const [nestedDropdown, setNestedDropdown] = useState(null); // Nested dropdown state
 
@@ -133,7 +134,10 @@ const AuthenticatedLayout = ({ children }) => {
                     {/* Profile Dropdown Menu */}
                     {isDropdownOpen && (
                       <div
-                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        onClick={() => {
+                          setIsDropdownOpen(!isDropdownOpen);
+                          setIsSidebarOpen(false);
+                        }}
                         className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-lg shadow-lg dark:bg-gray-800"
                         aria-labelledby="dropdown-user"
                       >

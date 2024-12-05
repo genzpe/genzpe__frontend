@@ -18,6 +18,7 @@ import sidebackground from "../assets/sideBackgroundAuth.png";
 import logoImage from "../assets/logoLogin.png";
 import AuthLoader from "@/components/ui/AuthLoader";
 import axios from "axios";
+import { BsInfoCircle } from "react-icons/bs";
 
 // Validation Schema for Formik
 const validationSchema = yup.object({
@@ -35,9 +36,11 @@ const validationSchema = yup.object({
     .oneOf([yup.ref("password"), null], "Passwords must match")
     .required("Confirm Password is required"),
   apikey: yup.string().required("API Key is required"),
+  policyAccepted: yup
+    .boolean()
+    .oneOf([true], "You must accept the policy to register"),
 });
 
-// Updated Register component
 const Register = () => {
   const navigate = useNavigate();
   const { login, loading, setLoading, setApiKey, setToken, setEmail } =
@@ -47,6 +50,9 @@ const Register = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
+  // State to track if the user attempted to submit without accepting the policy
+  const [policyError, setPolicyError] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -54,10 +60,18 @@ const Register = () => {
       password: "",
       confirmPassword: "",
       apikey: "",
+      policyAccepted: false,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       const { confirmPassword, ...submitValues } = values;
+
+      // Check if policy is accepted before submitting
+      if (!values.policyAccepted) {
+        setPolicyError(true);
+        return; // Prevent form submission
+      }
+
       try {
         setLoading(true);
 
@@ -103,11 +117,7 @@ const Register = () => {
           className="hidden md:inline-block md:max-w-[45%] max-h-[100vh] object-cover"
         />
         <Card
-          className={`h-full mt-20 mx-auto w-full md:w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl md:px-20 rounded-none border-none overflow-hidden ${
-            formik.errors.name && formik.errors.email
-              ? `sm:mt-0 sm:overflow-hidden`
-              : ``
-          } `}
+          className={`h-full mt-10 mx-auto w-full md:w-[65%] max-w-lg md:max-w-xl lg:max-w-2xl md:px-20 rounded-none border-none overflow-hidden`}
         >
           <CardHeader>
             <img
@@ -195,7 +205,7 @@ const Register = () => {
               </div>
 
               {/* Confirm Password Input */}
-              <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg relative mb-4">
+              <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg relative mb-2">
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
@@ -226,13 +236,14 @@ const Register = () => {
                     </div>
                   )}
               </div>
-              {/* Api key */}
+
+              {/* API Key Input */}
               <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mb-4">
                 <Input
                   id="apikey"
                   name="apikey"
-                  type="apikey"
-                  placeholder="Enter Api Key"
+                  type="text"
+                  placeholder="Enter API Key"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.apikey}
@@ -244,6 +255,39 @@ const Register = () => {
                   </div>
                 )}
               </div>
+
+              {/* Policy Accepted Checkbox */}
+              <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg flex items-center ">
+                <input
+                  type="checkbox"
+                  id="policyAccepted"
+                  name="policyAccepted"
+                  checked={formik.values.policyAccepted}
+                  onChange={formik.handleChange}
+                  className="mr-2"
+                />
+                <label htmlFor="policyAccepted" className="text-xs">
+                  I accept the{" "}
+                  <span
+                    className="cursor-pointer text-[#15274F] font-semibold"
+                    onClick={() => navigate("/terms")}
+                  >
+                    Terms of Service
+                  </span>{" "}
+                  and{" "}
+                  <span
+                    className="cursor-pointer text-[#15274F] font-semibold"
+                    onClick={() => navigate("/privacy")}
+                  >
+                    Privacy Policy
+                  </span>
+                </label>
+              </div>
+              {!policyError && (
+                <div className="text-red-500 text-xs mb-2 m-1 w-full text-center sm:text-start">
+                  You must accept the policy to proceed.
+                </div>
+              )}
 
               {/* Submit Button */}
               <Button
@@ -264,6 +308,16 @@ const Register = () => {
               >
                 Login here
               </span>
+            </div>
+            <div className="border-red-500 absolute bottom-2 px-2 text-center text-xs rounded-full flex items-center justify-around">
+              <BsInfoCircle className="text-red-500" />
+
+              <p className="text-xs p-[1.5px] text-red-500 ">
+                Disclaimer:{" "}
+                <span>
+                  GenZPe is a technology provider. We don't sell any data.
+                </span>
+              </p>
             </div>
           </CardContent>
         </Card>
