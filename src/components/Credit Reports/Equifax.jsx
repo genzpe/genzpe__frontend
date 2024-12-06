@@ -95,18 +95,22 @@ const EquifaxCreditReport = () => {
         if (response.data) {
           if (payload.response_type === "JSON" && response.data.success) {
             setReportStatus("Success");
+
             setHtmlReport(null);
             setCreditReport(response.data.data || {});
             toast.success(
               response.data.message || "Credit report fetched successfully!"
             );
+            setShowDropdown(true);
+            setIsModalCreditOpen(true);
           } else if (payload.response_type === "HTML") {
             setReportStatus("Success");
             setCreditReport(null);
             setHtmlReport(response.data.data); // Handle the HTML response
+
+            toast.success("Credit report fetched successfully!");
             setIsModalOpen(true);
             setShowDropdown(true);
-            toast.success("Credit report fetched successfully!");
           } else {
             setReportStatus("Failed");
             setCreditReport(null);
@@ -374,7 +378,7 @@ const EquifaxCreditReport = () => {
                     {/* {creditReport &&
                       JSON.stringify(creditReport, undefined, 10)} */}
                     {isModalCreditOpen && creditReport && (
-                      <div className="fixed inset-0  bg-black bg-opacity-50 z-50 top-24 mx-auto flex items-center justify-center px-4 py-6">
+                      <div className="fixed inset-0  bg-black bg-opacity-65 z-50  mx-auto flex items-center justify-center px-4 py-6">
                         <div className="relative max-w-4xl w-full h-auto bg-white rounded-lg overflow-hidden">
                           <JSONPretty
                             className="rounded-lg w-full h-[80vh] overflow-auto "
@@ -396,7 +400,7 @@ const EquifaxCreditReport = () => {
 
                     {/* Modal for HTML Report */}
                     {isModalOpen && htmlReport && (
-                      <div className="fixed overflow-auto  inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50">
+                      <div className="fixed overflow-auto  inset-0 z-50 flex items-start justify-center bg-black bg-opacity-65">
                         <div className="bg-white rounded-lg p-6 max-w-4xl w-full">
                           <div
                             ref={printRef}

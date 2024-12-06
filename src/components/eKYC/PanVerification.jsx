@@ -47,8 +47,10 @@ const PanVerification = () => {
 
         if (response.data && response.data.success) {
           setVerificationStatus("Success");
+
           setPanDetails(response.data.data.response || {});
           toast.success(response.data.message || "Verification successful!");
+          setShowDropdown(true);
         } else {
           setVerificationStatus("Failed");
           setPanDetails(null);

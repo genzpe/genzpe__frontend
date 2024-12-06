@@ -10,27 +10,29 @@ import { toast } from "react-toastify";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { AuthContext } from "@/context/AuthContext";
 import Loader from "../ui/Loader";
-
-// Validation schema for ITR
+import JSONPretty from "react-json-pretty";
+import "react-json-pretty/themes/monikai.css";
+// Validation schema for GST
 const validationSchema = yup.object({
-  itrId: yup
+  gst: yup
     .string()
     .matches(
-      /^[A-Za-z0-9]{6,12}$/,
-      "Invalid ITR ID. Must be 6-12 alphanumeric characters."
+      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}$/,
+      "Invalid GST format"
     )
-    .required("ITR ID is required"),
+    .required("GST number is required"),
 });
 
-const ItrVerification = () => {
+const Gst = () => {
   const [verificationStatus, setVerificationStatus] = useState(null);
-  const [itrDetails, setItrDetails] = useState(null);
+  const [gstDetails, setGstDetails] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const { loading, setLoading, api_key } = useContext(AuthContext);
+  const { loading, setLoading } = useContext(AuthContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      itrId: "",
+      gst: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -39,28 +41,30 @@ const ItrVerification = () => {
         const response = await axios.post(
           `${import.meta.env.VITE_APP_BACKEND_URL}/ekyc-verification`,
           {
-            type: "ITRC",
-            id: values.itrId,
+            id: values.gst,
+            type: "GSTIN",
           },
-          { withCredentials: true }
+          {
+            withCredentials: true,
+          }
         );
         setLoading(false);
 
         if (response.data && response.data.success) {
           setVerificationStatus("Success");
-
-          setItrDetails(response.data.data.response || {});
-          toast.success(response.data.message || "Verification successful!");
           setShowDropdown(true);
+          setIsModalOpen(true);
+          setGstDetails(response.data.data.response || {});
+          toast.success(response.data.message || "Verification successful!");
         } else {
           setVerificationStatus("Failed");
-          setItrDetails(null);
+          setGstDetails(null);
           toast.error(response.data.message || "Verification failed!");
         }
       } catch (error) {
         setLoading(false);
         setVerificationStatus("Failed");
-        setItrDetails(null);
+        setGstDetails(null);
         toast.error(
           error.response?.data?.message ||
             "Error during verification. Please try again."
@@ -72,12 +76,11 @@ const ItrVerification = () => {
   return (
     <>
       {loading && <Loader />}
-
-      <div className="relative w-full  h-[92vh] sm:h-[92vh] xl:h-[91vh] flex justify-center">
+      <div className="relative w-full  h-[93vh] sm:h-[92vh] xl:h-[91vh] flex justify-center ">
         <Card className="h-fit w-full max-w-lg px-6 py-8 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
           <CardHeader>
             <CardTitle className="text-center mt-2 tracking-wide text-lg text-gray-800">
-              Enter ITR ID
+              Enter GST Number
             </CardTitle>
           </CardHeader>
           <CardContent className="w-full flex flex-col items-center">
@@ -87,25 +90,25 @@ const ItrVerification = () => {
             >
               <div className="w-full text-sm max-w-sm mb-4">
                 <Input
-                  id="itrId"
-                  name="itrId"
+                  id="gst"
+                  name="gst"
                   type="text"
-                  placeholder="Enter PAN Number (e.g ABCDE1234f)"
+                  placeholder="12ABCDE1234A1AB"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.itrId}
+                  value={formik.values.gst}
                   className="w-full border rounded-md p-3 px-6 text-start text-sm"
                 />
-                {formik.touched.itrId && formik.errors.itrId ? (
+                {formik.touched.gst && formik.errors.gst ? (
                   <div className="text-red-500 text-sm mt-2">
-                    {formik.errors.itrId}
+                    {formik.errors.gst}
                   </div>
                 ) : null}
               </div>
 
               <Button
                 type="submit"
-                className="w-full max-w-sm bg-white-700 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50"
+                className={`w-full max-w-sm bg-white-700 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50 `}
                 style={{ backgroundColor: "#15274F" }}
               >
                 Submit
@@ -116,7 +119,7 @@ const ItrVerification = () => {
             {verificationStatus && (
               <div className="absolute bottom-0 w-full bg-green-100 rounded-md flex flex-col items-start">
                 <div
-                  className={`text-base font-semibold border-y-2 border-gray-300 flex px-4 py-2 items-center justify-between w-full cursor-pointer`}
+                  className={`text-base font-semibold border-y-2 border-gray-300 flex px-4 py-2 items-center justify-between w-full`}
                 >
                   <div className="flex items-center text-base w-fit">
                     Response <FaArrowRightLong className="mx-2" />
@@ -131,7 +134,10 @@ const ItrVerification = () => {
                     </span>
                   </div>
                   <FaChevronDown
-                    onClick={() => setShowDropdown(!showDropdown)}
+                    onClick={() => {
+                      setShowDropdown(!showDropdown);
+                      setIsModalOpen(!!gstDetails);
+                    }}
                     className={`ml-2 transition-transform cursor-pointer ${
                       showDropdown ? "rotate-180" : ""
                     }`}
@@ -140,60 +146,24 @@ const ItrVerification = () => {
 
                 {showDropdown &&
                   verificationStatus === "Success" &&
-                  itrDetails && (
-                    <div className="mt-0 text-left text-gray-800 space-y-2 px-4 py-2">
-                      {/* Displaying PAN Number */}
-                      <div>
-                        <strong>PAN Number:</strong>{" "}
-                        {itrDetails.pan_number || "N/A"}
-                      </div>
-
-                      {/* Displaying PAN Status */}
-                      <div>
-                        <strong>PAN Status:</strong>{" "}
-                        {itrDetails.pan_status || "N/A"}
-                      </div>
-
-                      {/* Displaying Client ID */}
-                      <div>
-                        <strong>Client ID:</strong>{" "}
-                        {itrDetails.client_id || "N/A"}
-                      </div>
-
-                      {/* Displaying Compliant Status */}
-                      <div>
-                        <strong>Compliant:</strong>{" "}
-                        {itrDetails.compliant ? "Yes" : "No"}
-                      </div>
-
-                      {/* Displaying Masked Name */}
-                      <div>
-                        <strong>Masked Name:</strong>{" "}
-                        {itrDetails.masked_name || "N/A"}
-                      </div>
-
-                      {/* Displaying PAN-Aadhaar Linked Status */}
-                      <div>
-                        <strong>PAN-Aadhaar Linked:</strong>{" "}
-                        {itrDetails.pan_aadhaar_linked || "N/A"}
-                      </div>
-
-                      {/* Displaying PAN Allotment Date */}
-                      <div>
-                        <strong>PAN Allotment Date:</strong>{" "}
-                        {itrDetails.pan_allotment_date || "N/A"}
-                      </div>
-
-                      {/* Displaying Specified Person under Section 206 */}
-                      <div>
-                        <strong>Specified Person under Section 206:</strong>{" "}
-                        {itrDetails.specified_person_under_206 || "N/A"}
-                      </div>
-
-                      {/* Displaying Valid PAN Status */}
-                      <div>
-                        <strong>Valid PAN:</strong>{" "}
-                        {itrDetails.valid_pan ? "Yes" : "No"}
+                  isModalOpen &&
+                  gstDetails && (
+                    <div className="fixed  inset-0 bg-black bg-opacity-65 z-50  mx-auto flex items-center justify-center px-4 py-6">
+                      <div className="relative max-w-4xl w-full h-auto bg-white rounded-lg overflow-hidden">
+                        <JSONPretty
+                          className="rounded-lg w-full h-[80vh] overflow-auto "
+                          id="json-pretty"
+                          data={gstDetails}
+                        />
+                        <button
+                          onClick={() => {
+                            setShowDropdown(!showDropdown);
+                            setIsModalOpen(false);
+                          }}
+                          className="absolute bottom-4 md:right-10 right-4 z-100 bg-white text-blue-500 hover:text-gray-800 rounded-lg p-2"
+                        >
+                          Close
+                        </button>
                       </div>
                     </div>
                   )}
@@ -206,4 +176,4 @@ const ItrVerification = () => {
   );
 };
 
-export default ItrVerification;
+export default Gst;

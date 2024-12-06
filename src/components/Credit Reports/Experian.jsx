@@ -70,9 +70,14 @@ const ExperianCreditReport = () => {
           setReportStatus("Success");
 
           if (values.fType === "JSON") {
-            setCreditReport(response.data || {});
+            // setCreditReport(response.data || {});
             setCreditReport(response.data.data);
+
             toast.success("Credit report fetched successfully!");
+            setShowDropdown(true);
+            setIsModalCreditOpen(true);
+
+            setCreditReportLink(null);
           } else {
             const creditReportLinkk = response?.data?.credit_report_link;
             if (!creditReportLinkk) {
@@ -167,12 +172,11 @@ const ExperianCreditReport = () => {
 
               <Button
                 type="submit"
-                className={`w-full max-w-sm bg-white-700 text-white py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50 ${
+                className={`w-full max-w-sm bg-white-700 text-white py-2 rounded-md text-sm border-gray-300 border-2 mt-4  ${
                   creditReportLink
                     ? `bg-green-600 hover:bg-green-500 text-white`
-                    : ""
+                    : "bg-[#15274F]"
                 } `}
-                style={{ backgroundColor: "#15274F" }}
               >
                 {creditReportLink ? (
                   <Link
@@ -221,7 +225,7 @@ const ExperianCreditReport = () => {
                   reportStatus === "Success" &&
                   isModalCreditOpen &&
                   creditReport && (
-                    <div className="fixed  inset-0 bg-black bg-opacity-50 z-50 top-24 mx-auto flex items-center justify-center px-4 py-6">
+                    <div className="fixed  inset-0 bg-black bg-opacity-65 z-50  mx-auto flex items-center justify-center px-4 py-6">
                       <div className="relative max-w-4xl w-full h-auto bg-white rounded-lg overflow-hidden">
                         <JSONPretty
                           className="rounded-lg w-full h-[80vh] overflow-auto "

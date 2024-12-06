@@ -23,6 +23,7 @@ import ItrVerification from "./components/eKYC/ItrVerification";
 import EquifaxCreditReport from "./components/Credit Reports/Equifax";
 import ExperianCreditReport from "./components/Credit Reports/Experian";
 import ApiManage from "./pages/ApiManage";
+import Gst from "./components/Master Data/Gst";
 
 const App = () => {
   const { isAuthenticated, isPasswordResetInitiated } = useContext(AuthContext);
@@ -181,6 +182,18 @@ const AppRoutes = ({ isAuthenticated, isPasswordResetInitiated }) => {
             </AuthenticatedLayout>
           ) : (
             <Navigate to="/" />
+          )
+        }
+      />
+      <Route
+        path="/masterdata/gst"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <Gst />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
           )
         }
       />

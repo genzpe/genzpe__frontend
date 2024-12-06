@@ -46,6 +46,7 @@ const AadhaarVerification = () => {
           setVerificationStatus("Success");
           setAadhaarDetails(response.data.data.response || {});
           toast.success(response.data.message || "Verification successful!");
+          setShowDropdown(true);
         } else {
           setVerificationStatus("Failed");
           setAadhaarDetails(null);

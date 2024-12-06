@@ -35,6 +35,7 @@ const AuthenticatedLayout = ({ children }) => {
   // Toggle profile dropdown visibility
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
+    setIsSidebarOpen(false);
   };
 
   const handleLogout = async () => {
@@ -402,7 +403,14 @@ const AuthenticatedLayout = ({ children }) => {
                           >
                             MCA Details
                           </li>
+
                           <li
+                            onClick={() =>
+                              navigate(
+                                "/masterdata/gst",
+                                setIsSidebarOpen(false)
+                              )
+                            }
                             className={`text-[14px] ml-1 my-3 pl-4 p-1 flex items-center justify-between  cursor-pointer hover:bg-blue-800 ${
                               isActiveLink("/masterdata/gst")
                                 ? "bg-[#99DE07] text-black rounded pl-5"

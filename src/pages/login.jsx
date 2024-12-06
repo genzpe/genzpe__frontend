@@ -196,7 +196,7 @@ const Login = () => {
               </div>
             </div>
             <div className="border-red-500 absolute bottom-2 px-2 text-center text-xs rounded-full  flex items-center justify-around">
-              <BsInfoCircle className="text-red-500" />
+              <BsInfoCircle className="text-red-500 mr-1" />
 
               <p className="text-xs p-[1.5px] text-red-500 ">
                 Disclaimer:{" "}
