@@ -68,8 +68,8 @@ const AadhaarVerification = () => {
     <>
       {loading && <Loader />}
       <div
-        className="relative w-full h-[92vh] sm:h-[92vh] flex justify-center border:none"
-        // style={{ backgroundColor: "#15274F" }}
+        className="relative w-full   flex justify-center border-none"
+        style={{ minHeight: "calc(100vh - 4.45rem)" }}
       >
         <Card className="h-fit w-full max-w-lg px-6 py-8 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
           <CardHeader>

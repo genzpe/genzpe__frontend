@@ -75,7 +75,7 @@ const AuthenticatedLayout = ({ children }) => {
       <div className="h-screen">
         {/* Navbar */}
         <nav
-          className="fixed h-16 z-50 w-full bg-white  border-gray-200"
+          className="fixed h-fit z-50 w-full bg-white  border-gray-200"
           style={{ background: "#050D2D", color: "white" }}
         >
           <div className="px-3 py-3 lg:px-5 lg:pl-3">
@@ -139,7 +139,7 @@ const AuthenticatedLayout = ({ children }) => {
                           setIsDropdownOpen(!isDropdownOpen);
                           setIsSidebarOpen(false);
                         }}
-                        className="absolute right-0 z-10 mt-2 w-48 bg-white rounded-lg shadow-lg dark:bg-gray-800"
+                        className="absolute right-2 z-10 mt-2 w-48 bg-white rounded-lg shadow-lg dark:bg-gray-800"
                         aria-labelledby="dropdown-user"
                       >
                         <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
@@ -159,10 +159,10 @@ const AuthenticatedLayout = ({ children }) => {
                               Settings
                             </Link>
                           </li>
-                          <li>
+                          <li className="mx-2 mb-1">
                             <Button
                               onClick={handleLogout}
-                              className="md:hidden inline-block w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mt-4 bg-gray-800"
+                              className="md:hidden inline-block w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mt-4 bg-[#050D2D] hover:bg-[#172045]"
                             >
                               Logout
                             </Button>
@@ -448,7 +448,7 @@ const AuthenticatedLayout = ({ children }) => {
               </ul>
             </div>
           </aside>
-          <div className="mt-16 sm:ml-64 flex-1 max-h-[92vh] h-[92vh] overflow-y-auto">
+          <div className="mt-[4.45rem] sm:ml-64 flex-1 max-h-[92vh] ">
             {/* Content */}
             {children}
           </div>

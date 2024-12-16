@@ -8,7 +8,11 @@ import {
 
 const Home = () => {
   return (
-    <div className="relative w-full h-[50vh]  flex justify-center items-center bg-gray-50">
+    <div
+      className="relative w-full flex justify-center items-center bg-gray-50"
+      style={{ minHeight: "calc(100vh - 4.45rem)" }}
+    >
+      {" "}
       <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg shadow-lg rounded-lg border-none">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-semibold text-gray-800 ">

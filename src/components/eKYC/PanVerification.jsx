@@ -71,7 +71,10 @@ const PanVerification = () => {
   return (
     <>
       {loading && <Loader />}
-      <div className="relative w-full  h-[93vh] sm:h-[92vh] xl:h-[91vh] flex justify-center ">
+      <div
+        className="relative w-full   flex justify-center "
+        style={{ minHeight: "calc(100vh - 4.45rem)" }}
+      >
         <Card className="h-fit w-full max-w-lg px-6 py-8 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
           <CardHeader>
             <CardTitle className="text-center mt-2 tracking-wide text-lg text-gray-800">
@@ -112,7 +115,7 @@ const PanVerification = () => {
 
             {/* Display Verification Result */}
             {verificationStatus && (
-              <div className="absolute bottom-0 w-full bg-green-100 rounded-md flex flex-col items-start">
+              <div className="absolute bottom-0  w-full bg-green-100 rounded-md flex flex-col items-start">
                 <div
                   className={`text-base font-semibold border-y-2 border-gray-300 flex px-4 py-2 items-center justify-between w-full`}
                 >

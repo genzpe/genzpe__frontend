@@ -135,7 +135,8 @@ const EquifaxCreditReport = () => {
     <>
       {loading && <Loader />}
 
-      <div className="relative w-full flex justify-center">
+      <div className="relative w-full   flex justify-center border-none">
+        {" "}
         <Card className="h-fit w-full max-w-lg px-6 md:py-8 pb-8 pt-4 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
           <CardHeader>
             <CardTitle className="text-center md:mt-2 mt-0 tracking-wide text-lg ">
@@ -334,7 +335,7 @@ const EquifaxCreditReport = () => {
               <Button
                 type="submit"
                 className="w-full max-w-sm bg-white-700 text-white py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50"
-                style={{ backgroundColor: "#15274F" }}
+                style={{ backgroundColor: "#050D2D" }}
               >
                 Fetch Credit Report
               </Button>

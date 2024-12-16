@@ -79,7 +79,11 @@ const BankAccountVerification = () => {
     <>
       {loading && <Loader />}
 
-      <div className="relative w-full h-[91vh] sm:[92vh] flex justify-center border:none">
+      <div
+        className="relative w-full   flex justify-center border-none"
+        style={{ minHeight: "calc(100vh - 4.45rem)" }}
+      >
+        {" "}
         <Card className="h-fit w-full max-w-lg px-6 py-8 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
           <CardHeader>
             <CardTitle className="text-center mt-2 tracking-wide text-lg">
