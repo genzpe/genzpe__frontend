@@ -1,17 +1,17 @@
 import React, { useContext, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import { FaChevronDown } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { AuthContext } from "@/context/AuthContext";
 import Loader from "../ui/Loader";
-import JSONPretty from "react-json-pretty";
-import "react-json-pretty/themes/monikai.css";
+
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { AuthContext } from "../../context/AuthContext";
 // Validation schema for GST
 const validationSchema = yup.object({
   gst: yup
@@ -148,22 +148,130 @@ const Gst = () => {
                   verificationStatus === "Success" &&
                   isModalOpen &&
                   gstDetails && (
-                    <div className="fixed  inset-0 bg-black bg-opacity-65 z-50  mx-auto flex items-center justify-center px-4 py-6">
-                      <div className="relative max-w-4xl w-full h-auto bg-white rounded-lg overflow-hidden">
-                        <JSONPretty
-                          className="rounded-lg w-full h-[80vh] overflow-auto "
-                          id="json-pretty"
-                          data={gstDetails}
-                        />
-                        <button
-                          onClick={() => {
-                            setShowDropdown(!showDropdown);
-                            setIsModalOpen(false);
-                          }}
-                          className="absolute bottom-4 md:right-10 right-4 z-100 bg-white text-blue-500 hover:text-gray-800 rounded-lg p-2"
-                        >
-                          Close
-                        </button>
+                    <div className="bg-green-100 mt-4 text-left text-gray-800 space-y-4 px-4 py-2 w-full max-w-full h-[calc(100vh-8rem)] overflow-y-auto rounded-md shadow-md">
+                      {/* Display Basic GST Details */}
+                      <div className="w-full space-y-2">
+                        <div>
+                          <strong>GSTIN:</strong> {gstDetails.gstin || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Business Name:</strong>{" "}
+                          {gstDetails.business_name || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Legal Name:</strong>{" "}
+                          {gstDetails.legal_name || "N/A"}
+                        </div>
+                        <div>
+                          <strong>State Jurisdiction:</strong>{" "}
+                          {gstDetails.state_jurisdiction || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Date of Registration:</strong>{" "}
+                          {gstDetails.date_of_registration || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Constitution of Business:</strong>{" "}
+                          {gstDetails.constitution_of_business || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Taxpayer Type:</strong>{" "}
+                          {gstDetails.taxpayer_type || "N/A"}
+                        </div>
+                        <div>
+                          <strong>GSTIN Status:</strong>{" "}
+                          {gstDetails.gstin_status || "N/A"}
+                        </div>
+                      </div>
+
+                      {/* Display Filing Status Table */}
+                      {gstDetails.filing_status &&
+                        gstDetails.filing_status.length > 0 && (
+                          <div className="overflow-x-auto w-full mt-4">
+                            <h3 className="font-semibold text-gray-700 mb-2">
+                              Filing Status:
+                            </h3>
+                            <table className="w-full bg-white border border-gray-200 rounded-md">
+                              <thead>
+                                <tr className="bg-gray-100 text-gray-700">
+                                  <th className="px-4 py-2 text-left border">
+                                    Return Type
+                                  </th>
+                                  <th className="px-4 py-2 text-left border">
+                                    Financial Year
+                                  </th>
+                                  <th className="px-4 py-2 text-left border">
+                                    Tax Period
+                                  </th>
+                                  <th className="px-4 py-2 text-left border">
+                                    Date of Filing
+                                  </th>
+                                  <th className="px-4 py-2 text-left border">
+                                    Status
+                                  </th>
+                                  <th className="px-4 py-2 text-left border">
+                                    Mode of Filing
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {gstDetails.filing_status.flatMap(
+                                  (filings, idx) =>
+                                    filings.map((filing, i) => (
+                                      <tr
+                                        key={`${idx}-${i}`}
+                                        className="text-sm text-gray-600 even:bg-gray-50"
+                                      >
+                                        <td className="px-4 py-2 border">
+                                          {filing.return_type}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                          {filing.financial_year}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                          {filing.tax_period}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                          {filing.date_of_filing}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                          {filing.status}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                          {filing.mode_of_filing}
+                                        </td>
+                                      </tr>
+                                    ))
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+
+                      {/* Additional Details */}
+                      <div className="w-full space-y-2">
+                        <div>
+                          <strong>Address:</strong>{" "}
+                          {gstDetails.address || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Nature of Business Activities:</strong>{" "}
+                          {gstDetails.nature_bus_activities?.join(", ") ||
+                            "N/A"}
+                        </div>
+                        <div>
+                          <strong>Core Business Activity:</strong>{" "}
+                          {gstDetails.nature_of_core_business_activity_description ||
+                            "N/A"}
+                        </div>
+                        <div>
+                          <strong>Aadhaar Validation:</strong>{" "}
+                          {gstDetails.aadhaar_validation || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Aadhaar Validation Date:</strong>{" "}
+                          {gstDetails.aadhaar_validation_date || "N/A"}
+                        </div>
                       </div>
                     </div>
                   )}

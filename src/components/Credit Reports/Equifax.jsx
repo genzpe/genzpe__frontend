@@ -1,24 +1,20 @@
 import React, { useContext, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { FaChevronDown } from "react-icons/fa";
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import Loader from "../ui/Loader";
-import { formatCreditReport, handlePrint } from "@/lib/formatCreditReport";
+// import { formatCreditReport, handlePrint } from "@/lib/formatCreditReport";
 import { FaArrowRightLong } from "react-icons/fa6";
 import JSONPretty from "react-json-pretty";
 import "react-json-pretty/themes/monikai.css";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { formatCreditReport, handlePrint } from "../../lib/formatCreditReport";
 
 // Validation schema
 const validationSchema = yup.object({

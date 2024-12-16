@@ -1,4 +1,4 @@
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";

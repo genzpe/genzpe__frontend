@@ -1,16 +1,16 @@
 import React, { useContext, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import { FaChevronDown } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { AuthContext } from "@/context/AuthContext";
 import Loader from "../ui/Loader";
-
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { AuthContext } from "../../context/AuthContext";
 // Validation schema for Aadhaar
 const validationSchema = yup.object({
   aadhaar: yup
@@ -139,9 +139,6 @@ const AadhaarVerification = () => {
                   verificationStatus === "Success" &&
                   aadhaarDetails && (
                     <div className="mt-0 text-left text-gray-800 space-y-2 px-4 py-2 ">
-                      <div>
-                        <strong>Client ID:</strong> {aadhaarDetails.client_id}
-                      </div>
                       <div>
                         <strong>Age Range:</strong> {aadhaarDetails.age_range}
                       </div>

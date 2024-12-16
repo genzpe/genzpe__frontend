@@ -3,12 +3,16 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { AuthContext } from "@/context/AuthContext";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Loader from "@/components/ui/Loader";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
+import {
+  Card,
+  CardContent,
+  CardTitle,
+  CardHeader,
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { AuthContext } from "../context/AuthContext";
+import Loader from "../components/ui/Loader";
 const ApiManage = () => {
   const { loading, setLoading } = useContext(AuthContext);
   const [apiKey, setApiKey] = useState("");

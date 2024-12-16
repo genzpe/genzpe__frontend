@@ -2,21 +2,21 @@ import React, { useContext } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import logoImage from "../assets/logoLogin.png";
 import sidebackground from "../assets/sideBackgroundAuth.png";
-import AuthLoader from "@/components/ui/AuthLoader";
+import AuthLoader from "../components/ui/AuthLoader";
 import axios from "axios"; // Custom Axios instance
+import { Button } from "../components/ui/button";
 
 const validationSchema = yup.object({
   email: yup
@@ -47,7 +47,7 @@ const ForgotPassword = () => {
             },
           }
         );
-        console.log("Forgot Password:", response.data);
+        // console.log("Forgot Password:", response.data);
         setLoading(false);
 
         if (response.status === 200) {
@@ -111,6 +111,7 @@ const ForgotPassword = () => {
                   </div>
                 ) : null}
               </div>
+
               <Button
                 type="submit"
                 className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mt-4"
@@ -119,6 +120,16 @@ const ForgotPassword = () => {
                 Send OTP
               </Button>
             </form>
+            {/* Redirect to Login */}
+            <div className="mt-4 text-center text-sm">
+              <span>Do you want to try logging in again?</span>
+              <span
+                className="ml-1 text-[#15274F] cursor-pointer font-semibold"
+                onClick={() => navigate("/login")}
+              >
+                Login here
+              </span>
+            </div>
           </CardContent>
         </Card>
       </div>

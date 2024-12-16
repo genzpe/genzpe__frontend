@@ -2,23 +2,23 @@ import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import logoImage from "../assets/logoLogin.png";
 import sidebackground from "../assets/sideBackgroundAuth.png";
-import { AuthContext } from "@/context/AuthContext";
-import AuthLoader from "@/components/ui/AuthLoader";
+import { AuthContext } from "../context/AuthContext";
+import AuthLoader from "../components/ui/AuthLoader";
 
 const validationSchema = yup.object({
   password: yup.string().required("Password is required"),

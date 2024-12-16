@@ -1,23 +1,23 @@
 import React, { useContext, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "../components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "@/context/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import logoImage from "../assets/logoLogin.png";
 import sidebackground from "../assets/sideBackgroundAuth.png";
-import AuthLoader from "@/components/ui/AuthLoader";
+import AuthLoader from "../components/ui/AuthLoader";
 import { BsInfoCircle } from "react-icons/bs";
 
 const validationSchema = yup.object({

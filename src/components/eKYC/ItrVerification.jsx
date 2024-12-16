@@ -1,16 +1,16 @@
 import React, { useContext, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import { FaChevronDown } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { AuthContext } from "@/context/AuthContext";
 import Loader from "../ui/Loader";
-
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { AuthContext } from "../../context/AuthContext";
 // Validation schema for ITR
 const validationSchema = yup.object({
   itrId: yup
@@ -152,12 +152,6 @@ const ItrVerification = () => {
                       <div>
                         <strong>PAN Status:</strong>{" "}
                         {itrDetails.pan_status || "N/A"}
-                      </div>
-
-                      {/* Displaying Client ID */}
-                      <div>
-                        <strong>Client ID:</strong>{" "}
-                        {itrDetails.client_id || "N/A"}
                       </div>
 
                       {/* Displaying Compliant Status */}

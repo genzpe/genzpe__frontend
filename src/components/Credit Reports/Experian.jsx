@@ -1,7 +1,4 @@
 import React, { useContext, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
@@ -10,97 +7,69 @@ import { toast } from "react-toastify";
 import { FaChevronDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Loader from "../ui/Loader";
-import { AuthContext } from "@/context/AuthContext";
 import { FaArrowRightLong } from "react-icons/fa6";
 import JSONPretty from "react-json-pretty";
 import "react-json-pretty/themes/monikai.css";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { AuthContext } from "../../context/AuthContext";
 // Validation schema
 const validationSchema = yup.object({
-  name: yup.string().required("Name is required"),
-  mobile: yup
+  gst: yup
     .string()
-    .matches(/^\d{10}$/, "Mobile number must be 10 digits")
-    .required("Mobile number is required"),
-  pan: yup
-    .string()
-    .matches(/^([A-Z]{5}[0-9]{4}[A-Z]{1})$/, "PAN must be in valid format")
-    .required("PAN is required"),
-  fType: yup
-    .string()
-    .oneOf(["PDF", "JSON"], "File type must be either PDF or JSON")
-    .required("File type is required"),
+    .matches(
+      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}$/,
+      "Invalid GST format"
+    )
+    .required("GST number is required"),
 });
 
-const ExperianCreditReport = () => {
-  const [reportStatus, setReportStatus] = useState(null);
-  const [creditReport, setCreditReport] = useState(null);
+const Gst = () => {
+  const [verificationStatus, setVerificationStatus] = useState(null);
+  const [gstDetails, setGstDetails] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [creditReportLink, setCreditReportLink] = useState(null);
-  const { loading, setLoading, api_key } = useContext(AuthContext);
-  const [isModalCreditOpen, setIsModalCreditOpen] = useState(false);
+  const { loading, setLoading } = useContext(AuthContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      mobile: "",
-      pan: "",
-      fType: "JSON",
+      gst: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
         setLoading(true);
-        const payload = {
-          api_key: { api_key },
-          type: "EXP",
-          Name: values.name,
-          MobileNumber: values.mobile,
-          Pan: values.pan,
-          FType: values.fType,
-        };
-
         const response = await axios.post(
-          `${import.meta.env.VITE_APP_BACKEND_URL}/experian`,
-          payload,
-          { withCredentials: true }
+          `${import.meta.env.VITE_APP_BACKEND_URL}/ekyc-verification`,
+          {
+            id: values.gst,
+            type: "GSTIN",
+          },
+          {
+            withCredentials: true,
+          }
         );
         setLoading(false);
 
-        if (response.status === 200) {
-          setReportStatus("Success");
-
-          if (values.fType === "JSON") {
-            // setCreditReport(response.data || {});
-            setCreditReport(response.data.data);
-
-            toast.success("Credit report fetched successfully!");
-            setShowDropdown(true);
-            setIsModalCreditOpen(true);
-
-            setCreditReportLink(null);
-          } else {
-            const creditReportLinkk = response?.data?.credit_report_link;
-            if (!creditReportLinkk) {
-              console.error("Failed to get credit report link.");
-              return;
-            }
-            setCreditReportLink(creditReportLinkk);
-            toast.success("Credit report PDF downloaded successfully!");
-          }
+        if (response.data && response.data.success) {
+          setVerificationStatus("Success");
+          setShowDropdown(true);
+          setIsModalOpen(true);
+          setGstDetails(response.data.data.response || {});
+          toast.success(response.data.message || "Verification successful!");
         } else {
-          setReportStatus("Failed");
-          setCreditReport(null);
-          toast.error("Failed to fetch the credit report!");
+          setVerificationStatus("Failed");
+          setGstDetails(null);
+          toast.error(response.data.message || "Verification failed!");
         }
       } catch (error) {
         setLoading(false);
-
-        console.error("Error:", error);
-        setReportStatus("Failed");
-        setCreditReport(null);
+        setVerificationStatus("Failed");
+        setGstDetails(null);
         toast.error(
           error.response?.data?.message ||
-            "Error while fetching the credit report. Please try again."
+            "Error during verification. Please try again."
         );
       }
     },
@@ -109,11 +78,11 @@ const ExperianCreditReport = () => {
   return (
     <>
       {loading && <Loader />}
-      <div className="relative w-full h-[92vh] flex justify-center">
-        <Card className="h-fit w-full max-w-lg px-6 md:py-8 pb-8 pt-4 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
+      <div className="relative w-full  h-[93vh] sm:h-[92vh] xl:h-[91vh] flex justify-center ">
+        <Card className="h-fit w-full max-w-lg px-6 py-8 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
           <CardHeader>
-            <CardTitle className="text-center md:mt-2 mt-0 tracking-wide text-lg">
-              Experian Credit Report
+            <CardTitle className="text-center mt-2 tracking-wide text-lg text-gray-800">
+              Enter GST Number
             </CardTitle>
           </CardHeader>
           <CardContent className="w-full flex flex-col items-center">
@@ -121,99 +90,55 @@ const ExperianCreditReport = () => {
               onSubmit={formik.handleSubmit}
               className="w-full flex flex-col items-center justify-start"
             >
-              {[
-                { id: "name", placeholder: "Full Name" },
-                { id: "mobile", placeholder: "Mobile Number" },
-                { id: "pan", placeholder: "PAN (e.g., ABCDE1234F)" },
-              ].map((field) => (
-                <div key={field.id} className="w-full text-sm max-w-sm mb-4">
-                  <Input
-                    id={field.id}
-                    name={field.id}
-                    type="text"
-                    placeholder={field.placeholder}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values[field.id]}
-                    className="w-full border rounded-md p-3 px-6 text-start text-sm"
-                  />
-                  {formik.touched[field.id] && formik.errors[field.id] ? (
-                    <div className="text-red-500 text-sm mt-2">
-                      {formik.errors[field.id]}
-                    </div>
-                  ) : null}
-                </div>
-              ))}
-
-              {/* File Type Selection */}
-              <div className="w-full max-w-sm mb-4">
-                <label className="block mb-2 font-semibold text-sm text-gray-700">
-                  File Type
-                </label>
-                <div className="border w-full rounded-md bg-gray-100 text-sm px-3">
-                  <select
-                    id="fType"
-                    name="fType"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.fType}
-                    className="w-[100%] p-2 outline-none bg-inherit "
-                  >
-                    <option value="JSON">JSON</option>
-                    <option value="PDF">PDF</option>
-                  </select>
-                </div>
-                {formik.touched.fType && formik.errors.fType ? (
+              <div className="w-full text-sm max-w-sm mb-4">
+                <Input
+                  id="gst"
+                  name="gst"
+                  type="text"
+                  placeholder="12ABCDE1234A1AB"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.gst}
+                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                />
+                {formik.touched.gst && formik.errors.gst ? (
                   <div className="text-red-500 text-sm mt-2">
-                    {formik.errors.fType}
+                    {formik.errors.gst}
                   </div>
                 ) : null}
               </div>
 
               <Button
                 type="submit"
-                className={`w-full max-w-sm bg-white-700 text-white py-2 rounded-md text-sm border-gray-300 border-2 mt-4  ${
-                  creditReportLink
-                    ? `bg-green-600 hover:bg-green-500 text-white`
-                    : "bg-[#15274F]"
-                } `}
+                className={`w-full max-w-sm bg-white-700 py-2 rounded-md text-sm border-gray-300 border-2 mt-4 hover:bg-blue-50 `}
+                style={{ backgroundColor: "#15274F" }}
               >
-                {creditReportLink ? (
-                  <Link
-                    to={creditReportLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setCreditReportLink(null)}
-                  >
-                    View Credit Report
-                  </Link>
-                ) : (
-                  `Fetch Credit Report`
-                )}
+                Submit
               </Button>
             </form>
 
-            {/* Display Credit Report Result */}
-            {reportStatus && (
+            {/* Display Verification Result */}
+            {verificationStatus && (
               <div className="absolute bottom-0 w-full bg-green-100 rounded-md flex flex-col items-start">
-                <div className="text-base font-semibold border-y-2 border-gray-300 px-4 py-2 flex items-center justify-between w-full">
+                <div
+                  className={`text-base font-semibold border-y-2 border-gray-300 flex px-4 py-2 items-center justify-between w-full`}
+                >
                   <div className="flex items-center text-base w-fit">
-                    Status
-                    <FaArrowRightLong className="mx-2" />
+                    Response <FaArrowRightLong className="mx-2" />
                     <span
                       className={`${
-                        reportStatus === "Success"
+                        verificationStatus === "Success"
                           ? "text-green-600"
                           : "text-red-600"
                       }`}
                     >
-                      {reportStatus}
+                      {verificationStatus}
                     </span>
                   </div>
                   <FaChevronDown
                     onClick={() => {
                       setShowDropdown(!showDropdown);
-                      setIsModalCreditOpen(!!creditReport);
+                      setIsModalOpen(!!gstDetails);
                     }}
                     className={`ml-2 transition-transform cursor-pointer ${
                       showDropdown ? "rotate-180" : ""
@@ -222,25 +147,133 @@ const ExperianCreditReport = () => {
                 </div>
 
                 {showDropdown &&
-                  reportStatus === "Success" &&
-                  isModalCreditOpen &&
-                  creditReport && (
-                    <div className="fixed  inset-0 bg-black bg-opacity-65 z-50  mx-auto flex items-center justify-center px-4 py-6">
-                      <div className="relative max-w-4xl w-full h-auto bg-white rounded-lg overflow-hidden">
-                        <JSONPretty
-                          className="rounded-lg w-full h-[80vh] overflow-auto "
-                          id="json-pretty"
-                          data={creditReport}
-                        />
-                        <button
-                          onClick={() => {
-                            setShowDropdown(!showDropdown);
-                            setIsModalOpen(false);
-                          }}
-                          className="absolute bottom-4 md:right-10 right-4 z-100 bg-white text-blue-500 hover:text-gray-800 rounded-lg p-2"
-                        >
-                          Close
-                        </button>
+                  verificationStatus === "Success" &&
+                  isModalOpen &&
+                  gstDetails && (
+                    <div className="bg-green-100 mt-4 text-left text-gray-800 space-y-4 px-4 py-2 w-full max-w-full h-[calc(100vh-8rem)] overflow-y-auto rounded-md shadow-md">
+                      {/* Display Basic GST Details */}
+                      <div className="w-full space-y-2">
+                        <div>
+                          <strong>GSTIN:</strong> {gstDetails.gstin || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Business Name:</strong>{" "}
+                          {gstDetails.business_name || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Legal Name:</strong>{" "}
+                          {gstDetails.legal_name || "N/A"}
+                        </div>
+                        <div>
+                          <strong>State Jurisdiction:</strong>{" "}
+                          {gstDetails.state_jurisdiction || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Date of Registration:</strong>{" "}
+                          {gstDetails.date_of_registration || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Constitution of Business:</strong>{" "}
+                          {gstDetails.constitution_of_business || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Taxpayer Type:</strong>{" "}
+                          {gstDetails.taxpayer_type || "N/A"}
+                        </div>
+                        <div>
+                          <strong>GSTIN Status:</strong>{" "}
+                          {gstDetails.gstin_status || "N/A"}
+                        </div>
+                      </div>
+
+                      {/* Display Filing Status Table */}
+                      {gstDetails.filing_status &&
+                        gstDetails.filing_status.length > 0 && (
+                          <div className="overflow-x-auto w-full mt-4">
+                            <h3 className="font-semibold text-gray-700 mb-2">
+                              Filing Status:
+                            </h3>
+                            <table className="w-full bg-white border border-gray-200 rounded-md">
+                              <thead>
+                                <tr className="bg-gray-100 text-gray-700">
+                                  <th className="px-4 py-2 text-left border">
+                                    Return Type
+                                  </th>
+                                  <th className="px-4 py-2 text-left border">
+                                    Financial Year
+                                  </th>
+                                  <th className="px-4 py-2 text-left border">
+                                    Tax Period
+                                  </th>
+                                  <th className="px-4 py-2 text-left border">
+                                    Date of Filing
+                                  </th>
+                                  <th className="px-4 py-2 text-left border">
+                                    Status
+                                  </th>
+                                  <th className="px-4 py-2 text-left border">
+                                    Mode of Filing
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {gstDetails.filing_status.flatMap(
+                                  (filings, idx) =>
+                                    filings.map((filing, i) => (
+                                      <tr
+                                        key={`${idx}-${i}`}
+                                        className="text-sm text-gray-600 even:bg-gray-50"
+                                      >
+                                        <td className="px-4 py-2 border">
+                                          {filing.return_type}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                          {filing.financial_year}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                          {filing.tax_period}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                          {filing.date_of_filing}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                          {filing.status}
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                          {filing.mode_of_filing}
+                                        </td>
+                                      </tr>
+                                    ))
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+
+                      {/* Additional Details */}
+                      <div className="w-full space-y-2">
+                        <div>
+                          <strong>Address:</strong>{" "}
+                          {gstDetails.address || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Nature of Business Activities:</strong>{" "}
+                          {gstDetails.nature_bus_activities?.join(", ") ||
+                            "N/A"}
+                        </div>
+                        <div>
+                          <strong>Core Business Activity:</strong>{" "}
+                          {gstDetails.nature_of_core_business_activity_description ||
+                            "N/A"}
+                        </div>
+                        <div>
+                          <strong>Aadhaar Validation:</strong>{" "}
+                          {gstDetails.aadhaar_validation || "N/A"}
+                        </div>
+                        <div>
+                          <strong>Aadhaar Validation Date:</strong>{" "}
+                          {gstDetails.aadhaar_validation_date || "N/A"}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -253,4 +286,4 @@ const ExperianCreditReport = () => {
   );
 };
 
-export default ExperianCreditReport;
+export default Gst;

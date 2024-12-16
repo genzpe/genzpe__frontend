@@ -1,14 +1,14 @@
 import React, { useContext, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { AuthContext } from "../../context/AuthContext";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import axios from "axios";
 import { FaChevronDown } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { FaArrowRightLong } from "react-icons/fa6";
-import { AuthContext } from "@/context/AuthContext";
 import Loader from "../ui/Loader";
 
 // Validation schema for PAN
@@ -140,10 +140,6 @@ const PanVerification = () => {
                   verificationStatus === "Success" &&
                   panDetails && (
                     <div className="mt-0 text-left text-gray-800 space-y-2 px-4 py-2 ">
-                      <div>
-                        <strong>Client ID:</strong>{" "}
-                        {panDetails.client_id || "N/A"}
-                      </div>
                       <div>
                         <strong>Full Name:</strong>{" "}
                         {panDetails.full_name || "N/A"}
