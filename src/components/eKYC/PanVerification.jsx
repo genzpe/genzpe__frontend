@@ -9,7 +9,7 @@ import axios from "axios";
 import { FaChevronDown } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { FaArrowRightLong } from "react-icons/fa6";
-import Loader from "../ui/Loader";
+import { Loader } from "../ui/Loader";
 
 // Validation schema for PAN
 const validationSchema = yup.object({

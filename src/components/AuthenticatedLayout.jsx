@@ -285,41 +285,18 @@ const AuthenticatedLayout = ({ children }) => {
                           </li>
                         </ul>
                       )}
-                    </li>
-                    <li>
-                      <div
-                        className="pl-4 flex items-center justify-start text-sm cursor-pointer  hover:bg-blue-800"
-                        onClick={() => handleNestedDropdown("cKYC")}
+                      <li
+                        onClick={() =>
+                          navigate("/prefill", setIsSidebarOpen(false))
+                        }
+                        className={`text-[14px] my-3 ml-1 pl-3 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                          isActiveLink("/prefill")
+                            ? "bg-[#99DE07] text-black rounded pl-5"
+                            : ""
+                        }`}
                       >
-                        cKYC
-                        {nestedDropdown === "cKYC" ? (
-                          <FaChevronUp size={14} className="ml-2" />
-                        ) : (
-                          <FaChevronDown size={14} className="ml-2" />
-                        )}
-                      </div>
-                      {nestedDropdown === "cKYC" && (
-                        <ul className="ml-4 mt-2 space-y-2 border-l-2 border-[#99DE07] text-sm">
-                          <li
-                            className={`text-[14px] ml-1 my-3 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/ckyc/search")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            cKYC Search
-                          </li>
-                          <li
-                            className={`text-[14px] ml-1 my-3 pl-4 p-1 flex items-center justify-between  cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/ckyc/download")
-                                ? "bg-[#99DE07] text-black rounded pl-5"
-                                : ""
-                            }`}
-                          >
-                            cKYC Download
-                          </li>
-                        </ul>
-                      )}
+                        Prefill
+                      </li>
                     </li>
                     <li>
                       <div

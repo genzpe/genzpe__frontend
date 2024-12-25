@@ -6,7 +6,7 @@ import axios from "axios";
 import { FaChevronDown } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { FaArrowRightLong } from "react-icons/fa6";
-import Loader from "../ui/Loader";
+import { Loader } from "../ui/Loader";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";

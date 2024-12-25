@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 
 import { FaChevronDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Loader from "../ui/Loader";
+import { Loader } from "../ui/Loader";
 import { FaArrowRightLong } from "react-icons/fa6";
 import JSONPretty from "react-json-pretty";
 import "react-json-pretty/themes/monikai.css";
@@ -232,8 +232,8 @@ const ExperianCreditReport = () => {
                     <div className="fixed  inset-0 bg-black bg-opacity-65 z-50  mx-auto flex items-center justify-center px-4 py-6">
                       <div className="relative max-w-4xl w-full h-auto bg-white rounded-lg overflow-hidden">
                         <JSONPretty
-                          className="rounded-lg w-full h-[80vh] overflow-auto "
-                          id="json-pretty"
+                          className="rounded-lg w-full h-[80vh] overflow-auto bg-white "
+                          // id="json-pretty"
                           data={creditReport}
                         />
                         <button
@@ -241,7 +241,7 @@ const ExperianCreditReport = () => {
                             setShowDropdown(!showDropdown);
                             setIsModalOpen(false);
                           }}
-                          className="absolute bottom-4 md:right-10 right-4 z-100 bg-white text-blue-500 hover:text-gray-800 rounded-lg p-2"
+                          className="absolute bottom-4 md:right-10 right-4 z-100 bg-red-500 hover:bg-red-600 text-white rounded-lg p-2"
                         >
                           Close
                         </button>

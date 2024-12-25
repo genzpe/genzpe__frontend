@@ -6,7 +6,7 @@ import axios from "axios";
 import { FaChevronDown } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { FaArrowRightLong } from "react-icons/fa6";
-import Loader from "../ui/Loader";
+import { Loader } from "../ui/Loader";
 import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -30,7 +30,7 @@ const BankAccountVerification = () => {
   const [verificationStatus, setVerificationStatus] = useState(null);
   const [accountDetails, setAccountDetails] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const { loading, setLoading, api_key } = useContext(AuthContext);
+  const { loading, setLoading } = useContext(AuthContext);
 
   const formik = useFormik({
     initialValues: {

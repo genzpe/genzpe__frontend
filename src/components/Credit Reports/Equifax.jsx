@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FaChevronDown } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthContext";
-import Loader from "../ui/Loader";
+import { Loader1 } from "../ui/Loader";
 // import { formatCreditReport, handlePrint } from "@/lib/formatCreditReport";
 import { FaArrowRightLong } from "react-icons/fa6";
 import JSONPretty from "react-json-pretty";
@@ -130,10 +130,22 @@ const EquifaxCreditReport = () => {
       }
     },
   });
+  useEffect(() => {
+    if (loading) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    // Cleanup in case the component unmounts
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [loading]);
 
   return (
     <>
-      {loading && <Loader />}
+      {loading && <Loader1 />}
 
       <div className="relative w-full   flex justify-center border-none">
         {" "}
@@ -387,7 +399,7 @@ const EquifaxCreditReport = () => {
                               setShowDropdown(!showDropdown);
                               setIsModalOpen(false);
                             }}
-                            className="absolute bottom-4 md:right-10 right-4 z-100 bg-white text-blue-500 hover:text-gray-800 rounded-lg p-2"
+                            className="absolute bottom-4 md:right-10 right-4 z-100 bg-red-500 hover:bg-red-600 text-white rounded-lg p-2"
                           >
                             Close
                           </button>
@@ -409,7 +421,7 @@ const EquifaxCreditReport = () => {
                           <div className="md:mt-4 mt-0 text-right">
                             <button
                               onClick={() => handlePrint(printRef)}
-                              className="md:px-4 px-2 md:py-2 py-1  bg-blue-500 text-white rounded hover:bg-blue-600"
+                              className="md:px-4 px-2 md:py-2 py-1  bg-blue-700 text-white rounded-xl hover:bg-blue-600"
                             >
                               Print
                             </button>
@@ -418,7 +430,7 @@ const EquifaxCreditReport = () => {
                                 setShowDropdown(!showDropdown);
                                 setIsModalOpen(false);
                               }}
-                              className="text-gray-500 hover:text-gray-800 ml-2 "
+                              className="text-white bg-red-500 rounded-xl hover:bg-red-600 ml-2 "
                             >
                               Close
                             </button>

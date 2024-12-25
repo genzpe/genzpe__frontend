@@ -87,3 +87,8 @@
   font-weight: 500;
   font-style: normal;
 }
+
+/* JSON preetier Css */
+.__json-pretty__ {
+  background-color: rgb(245, 238, 238) !important;
+}

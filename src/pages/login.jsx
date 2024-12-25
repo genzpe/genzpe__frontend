@@ -17,8 +17,8 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import logoImage from "../assets/logoLogin.png";
 import sidebackground from "../assets/sideBackgroundAuth.png";
-import AuthLoader from "../components/ui/AuthLoader";
 import { BsInfoCircle } from "react-icons/bs";
+import { AuthLoader } from "../components/ui/Loader";
 
 const validationSchema = yup.object({
   email: yup

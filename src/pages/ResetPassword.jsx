@@ -18,7 +18,7 @@ import axios from "axios";
 import logoImage from "../assets/logoLogin.png";
 import sidebackground from "../assets/sideBackgroundAuth.png";
 import { AuthContext } from "../context/AuthContext";
-import AuthLoader from "../components/ui/AuthLoader";
+import { AuthLoader } from "../components/ui/Loader";
 
 const validationSchema = yup.object({
   password: yup.string().required("Password is required"),
@@ -201,7 +201,17 @@ const ResetPassword = () => {
               >
                 Submit
               </Button>
-            </form>
+            </form>{" "}
+            {/* Redirect to Login */}
+            <div className="mt-4 text-center text-sm">
+              <span>Do you want to try logging in again?</span>
+              <span
+                className="ml-1 text-[#15274F] cursor-pointer font-semibold"
+                onClick={() => navigate("/login")}
+              >
+                Login here
+              </span>
+            </div>
           </CardContent>
         </Card>
       </div>

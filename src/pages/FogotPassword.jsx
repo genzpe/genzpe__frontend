@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import logoImage from "../assets/logoLogin.png";
 import sidebackground from "../assets/sideBackgroundAuth.png";
-import AuthLoader from "../components/ui/AuthLoader";
+import { AuthLoader } from "../components/ui/Loader";
 import axios from "axios"; // Custom Axios instance
 import { Button } from "../components/ui/button";
 

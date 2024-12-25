@@ -24,6 +24,7 @@ import EquifaxCreditReport from "./components/Credit Reports/Equifax";
 import ExperianCreditReport from "./components/Credit Reports/Experian";
 import ApiManage from "./pages/ApiManage";
 import Gst from "./components/Master Data/Gst";
+import Prefill from "./components/Prefill";
 
 const App = () => {
   const { isAuthenticated, isPasswordResetInitiated } = useContext(AuthContext);
@@ -124,13 +125,12 @@ const AppRoutes = ({ isAuthenticated, isPasswordResetInitiated }) => {
           )
         }
       />
-
       <Route
-        path="/ekyc/itr-verification"
+        path="/prefill"
         element={
           isAuthenticated ? (
             <AuthenticatedLayout>
-              <ItrVerification />
+              <Prefill />
             </AuthenticatedLayout>
           ) : (
             <Navigate to="/login" />
@@ -143,6 +143,18 @@ const AppRoutes = ({ isAuthenticated, isPasswordResetInitiated }) => {
           isAuthenticated ? (
             <AuthenticatedLayout>
               <BankAccountVerification />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />{" "}
+      <Route
+        path="/ekyc/itr-verification"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <ItrVerification />
             </AuthenticatedLayout>
           ) : (
             <Navigate to="/login" />
@@ -197,7 +209,6 @@ const AppRoutes = ({ isAuthenticated, isPasswordResetInitiated }) => {
           )
         }
       />
-
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

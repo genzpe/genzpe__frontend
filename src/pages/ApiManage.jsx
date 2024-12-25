@@ -12,7 +12,7 @@ import {
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { AuthContext } from "../context/AuthContext";
-import Loader from "../components/ui/Loader";
+import { Loader } from "../components/ui/Loader";
 const ApiManage = () => {
   const { loading, setLoading } = useContext(AuthContext);
   const [apiKey, setApiKey] = useState("");
