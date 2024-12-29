@@ -100,7 +100,7 @@ const Gst = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.gst}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.gst && formik.errors.gst ? (
                   <div className="text-red-500 text-sm mt-2">

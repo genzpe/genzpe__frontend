@@ -104,7 +104,7 @@ const BankAccountVerification = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.accountNumber}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.accountNumber && formik.errors.accountNumber ? (
                   <div className="text-red-500 text-sm mt-2">
@@ -122,7 +122,7 @@ const BankAccountVerification = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.ifsc}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.ifsc && formik.errors.ifsc ? (
                   <div className="text-red-500 text-sm mt-2">

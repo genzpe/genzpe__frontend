@@ -92,3 +92,10 @@
 .__json-pretty__ {
   background-color: white !important;
 }
+
+input,
+select,
+textarea,
+button {
+  font-size: 16px !important;
+}

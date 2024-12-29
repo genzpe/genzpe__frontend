@@ -38,6 +38,7 @@ const Prefill = () => {
     onSubmit: async (values) => {
       try {
         setLoading(true);
+        debugger;
         const response = await axios.post(
           `${import.meta.env.VITE_APP_BACKEND_URL}/prefill`,
           {
@@ -49,52 +50,20 @@ const Prefill = () => {
             withCredentials: true,
           }
         );
-        setLoading(false);
-
-        console.log(response.data.data.result);
-        const cleanResponseString = response.data.data.result.replace(
-          /Malformed request 400$/,
-          ""
+        setAccountDetails(
+          response.data.data.result.CCRResponse?.CIRReportDataLst[0]
         );
-
-        // Now parse the cleaned string into JSON
-        let jsonResponse;
-        try {
-          jsonResponse = JSON.parse(cleanResponseString);
-          console.log(jsonResponse);
-
-          // Check for errors in the response
-          if (
-            jsonResponse.CCRResponse &&
-            jsonResponse.CCRResponse.CIRReportDataLst[0].Error
-          ) {
-            const error = jsonResponse.CCRResponse.CIRReportDataLst[0].Error;
-            toast.error(`Error: ${error.ErrorDesc}`); // Show the error message in toast
-            setVerificationStatus("Failed");
-            setAccountDetails(null);
-            return;
-          }
-
-          if (response.data && response.data.success) {
-            setVerificationStatus("Success");
-            setAccountDetails(jsonResponse.CCRResponse.CIRReportDataLst[0]); // Set the first CIRReportData
-            toast.success(response.data.message || "Verification successful!");
-            setShowDropdown(true);
-          } else {
-            setVerificationStatus("Failed");
-            setAccountDetails(null);
-            toast.error(response.data.message || "Verification failed!");
-          }
-        } catch (e) {
-          console.error("Error parsing JSON:", e);
-          toast.error("Error parsing the response data.");
-        }
+        setVerificationStatus("Success");
+        setShowDropdown(true);
+        console.log(response);
+        setLoading(false);
+        toast.success("Verification successful!");
       } catch (error) {
         setLoading(false);
         setVerificationStatus("Failed");
         setAccountDetails(null);
         toast.error(
-          error.response?.data?.message ||
+          error.response?.message ||
             "Error during verification. Please try again."
         );
       }
@@ -288,7 +257,7 @@ const Prefill = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.fullname}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.fullname && formik.errors.fullname ? (
                   <div className="text-red-500 text-sm mt-2">
@@ -307,7 +276,7 @@ const Prefill = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.mobileNumber}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.mobileNumber && formik.errors.mobileNumber ? (
                   <div className="text-red-500 text-sm mt-2">

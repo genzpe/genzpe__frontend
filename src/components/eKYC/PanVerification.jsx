@@ -95,7 +95,7 @@ const PanVerification = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.pan}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.pan && formik.errors.pan ? (
                   <div className="text-red-500 text-sm mt-2">

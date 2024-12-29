@@ -79,10 +79,7 @@ const ApiManage = () => {
   return (
     <>
       {loading && <Loader />}
-      <div
-        className="relative w-full   flex justify-center border-none"
-        style={{ minHeight: "calc(100vh - 4.45rem)" }}
-      >
+      <div className="relative w-full   flex justify-center border-none">
         {" "}
         <Card className="h-fit w-full max-w-lg px-6 py-8 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
           <CardHeader>
@@ -104,7 +101,7 @@ const ApiManage = () => {
                   value={formik.values.apiKey}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.apiKey && formik.errors.apiKey && (
                   <p className="text-red-500 text-sm mt-2">

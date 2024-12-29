@@ -103,7 +103,7 @@ const ForgotPassword = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.email}
-                  className="w-full"
+                  className="w-full text-base"
                 />
                 {formik.touched.email && formik.errors.email ? (
                   <div className="text-red-500 text-sm mt-2 flex justify-start">

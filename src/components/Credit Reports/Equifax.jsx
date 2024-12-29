@@ -187,7 +187,7 @@ const EquifaxCreditReport = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.middleName}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
               </div>
 
@@ -200,7 +200,7 @@ const EquifaxCreditReport = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.lastName}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.lastName && formik.errors.lastName ? (
                   <div className="text-red-500 text-sm mt-2">
@@ -218,7 +218,7 @@ const EquifaxCreditReport = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.dob}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.dob && formik.errors.dob ? (
                   <div className="text-red-500 text-sm mt-2">
@@ -236,7 +236,7 @@ const EquifaxCreditReport = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.address}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.address && formik.errors.address ? (
                   <div className="text-red-500 text-sm mt-2">
@@ -254,7 +254,7 @@ const EquifaxCreditReport = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.state}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.state && formik.errors.state ? (
                   <div className="text-red-500 text-sm mt-2">
@@ -272,7 +272,7 @@ const EquifaxCreditReport = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.postal}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.postal && formik.errors.postal ? (
                   <div className="text-red-500 text-sm mt-2">
@@ -290,7 +290,7 @@ const EquifaxCreditReport = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.mobile}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.mobile && formik.errors.mobile ? (
                   <div className="text-red-500 text-sm mt-2">
@@ -308,7 +308,7 @@ const EquifaxCreditReport = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.idValue}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.idValue && formik.errors.idValue ? (
                   <div className="text-red-500 text-sm mt-2">
@@ -430,7 +430,7 @@ const EquifaxCreditReport = () => {
                                 setShowDropdown(!showDropdown);
                                 setIsModalOpen(false);
                               }}
-                              className="text-white bg-red-500 rounded-xl hover:bg-red-600 ml-2 "
+                              className="text-white bg-red-500 rounded-xl hover:bg-red-600 ml-2 md:px-4 px-2 md:py-2 py-1"
                             >
                               Close
                             </button>

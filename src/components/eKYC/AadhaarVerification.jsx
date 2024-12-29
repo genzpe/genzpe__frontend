@@ -91,7 +91,7 @@ const AadhaarVerification = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.aadhaar}
-                  className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                  className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
                 {formik.touched.aadhaar && formik.errors.aadhaar ? (
                   <div className="text-red-500 text-sm mt-2">

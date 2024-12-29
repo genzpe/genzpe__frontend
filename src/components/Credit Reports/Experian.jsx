@@ -139,7 +139,7 @@ const ExperianCreditReport = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values[field.id]}
-                    className="w-full border rounded-md p-3 px-6 text-start text-sm"
+                    className="w-full border rounded-md p-3 px-6 text-start text-base"
                   />
                   {formik.touched[field.id] && formik.errors[field.id] ? (
                     <div className="text-red-500 text-sm mt-2">
