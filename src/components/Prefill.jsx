@@ -38,7 +38,6 @@ const Prefill = () => {
     onSubmit: async (values) => {
       try {
         setLoading(true);
-        debugger;
         const response = await axios.post(
           `${import.meta.env.VITE_APP_BACKEND_URL}/prefill`,
           {
