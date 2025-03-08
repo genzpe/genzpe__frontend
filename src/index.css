@@ -99,3 +99,28 @@ textarea,
 button {
   font-size: 16px !important;
 }
+
+/* Custom Scrollbar for Webkit Browsers (Chrome, Safari) */
+.scroll-container::-webkit-scrollbar {
+  width: 6px; /* Thinner scrollbar */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: transparent; /* Removes box effect */
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #979aac; /* Orange scrollbar */
+  border-radius: 0px; /* No rounded edges */
+  transition: background 0.3s ease;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #78788b; /* Slightly darker orange on hover */
+}
+
+/* Firefox Scrollbar */
+.scroll-container {
+  scrollbar-color: #7b7691 transparent; /* Thumb color, No background */
+  scrollbar-width: thin;
+}

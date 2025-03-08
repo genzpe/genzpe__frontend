@@ -198,7 +198,7 @@ const AuthenticatedLayout = ({ children }) => {
             style={{ background: "#050D2D", color: "white" }}
             aria-label="Sidebar"
           >
-            <div className="h-full px-3 mt-4 pb-4 overflow-y-auto ">
+            <div className="h-full px-3 mt-4 pb-4 overflow-y-auto scroll-container ">
               <ul className="space-y-2 font-medium">
                 {/* Individual */}
                 <li>
@@ -283,6 +283,21 @@ const AuthenticatedLayout = ({ children }) => {
                           >
                             ITR Compliance
                           </li>
+                          <li
+                            // onClick={() =>
+                            //   navigate(
+                            //     "/ekyc/mobile-aadhaar-verification",
+                            //     setIsSidebarOpen(false)
+                            //   )
+                            // }
+                            className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between text-sm  cursor-pointer hover:bg-blue-800 ${
+                              isActiveLink("/ekyc/mobile-aadhaar-verification")
+                                ? "bg-[#99DE07] text-black rounded pl-5"
+                                : ""
+                            }`}
+                          >
+                            Mobile Aadhaar Verification
+                          </li>
                         </ul>
                       )}
                       <li
@@ -349,17 +364,41 @@ const AuthenticatedLayout = ({ children }) => {
                 </li>
 
                 {/* Company */}
-                <li className="mt-4">
+                <li className="mt-3">
                   <div className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-800 rounded-md">
                     <div className="flex items-center gap-2">
                       <FiGrid className="text-2xl" />
                       <span className="font-medium">Company</span>
                     </div>
                   </div>
-                  <ul className="ml-4 mt-2 space-y-2 text-sm  border-l-2 border-[#99DE07]">
+                  <ul className="ml-4 mt-2 space-y-1 text-sm  border-l-2 border-[#99DE07]">
+                    <li
+                      onClick={() =>
+                        navigate("/financial/basic", setIsSidebarOpen(false))
+                      }
+                      className={`text-[14px] my-2 ml-1 pl-3 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                        isActiveLink("/financial/basic")
+                          ? "bg-[#99DE07] text-black rounded pl-5"
+                          : ""
+                      }`}
+                    >
+                      Basic
+                    </li>{" "}
+                    <li
+                      // onClick={() =>
+                      //   navigate("/financial/summary", setIsSidebarOpen(false))
+                      // }
+                      className={`text-[14px]  ml-1 pl-3 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                        isActiveLink("/financial/summary")
+                          ? "bg-[#99DE07] text-black rounded pl-5"
+                          : ""
+                      }`}
+                    >
+                      Summary
+                    </li>
                     <li>
                       <div
-                        className="pl-4 flex items-center justify-start   cursor-pointer hover:bg-blue-800"
+                        className="pl-4 mt-3 flex items-center justify-start   cursor-pointer hover:bg-blue-800"
                         onClick={() => handleNestedDropdown("masterdata")}
                       >
                         Master Data
@@ -372,6 +411,12 @@ const AuthenticatedLayout = ({ children }) => {
                       {nestedDropdown === "masterdata" && (
                         <ul className="ml-4 mt-2 space-y-2 text-sm border-l-2 border-[#99DE07]">
                           <li
+                            onClick={() =>
+                              navigate(
+                                "/master/mca-details",
+                                setIsSidebarOpen(false)
+                              )
+                            }
                             className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
                               isActiveLink("/master/mca-details")
                                 ? "bg-[#99DE07] text-black rounded pl-5"
@@ -380,25 +425,101 @@ const AuthenticatedLayout = ({ children }) => {
                           >
                             MCA Details
                           </li>
-
+                        </ul>
+                      )}
+                    </li>
+                    <li>
+                      <div
+                        className="pl-4 mt-4 flex items-center justify-start   cursor-pointer hover:bg-blue-800"
+                        onClick={() => handleNestedDropdown("gst")}
+                      >
+                        GST
+                        {nestedDropdown === "gst" ? (
+                          <FaChevronUp size={14} className="ml-2" />
+                        ) : (
+                          <FaChevronDown size={14} className="ml-2" />
+                        )}
+                      </div>
+                      {nestedDropdown === "gst" && (
+                        <ul className="ml-4 mt-2 space-y-2 text-sm border-l-2 border-[#99DE07]">
                           <li
                             onClick={() =>
-                              navigate(
-                                "/masterdata/gst",
-                                setIsSidebarOpen(false)
-                              )
+                              navigate("/gst/basic", setIsSidebarOpen(false))
                             }
                             className={`text-[14px] ml-1 my-3 pl-4 p-1 flex items-center justify-between  cursor-pointer hover:bg-blue-800 ${
-                              isActiveLink("/masterdata/gst")
+                              isActiveLink("/gst/basic")
                                 ? "bg-[#99DE07] text-black rounded pl-5"
                                 : ""
                             }`}
                           >
-                            GST
+                            Basic
                           </li>
                         </ul>
                       )}
                     </li>
+                    {/* <li className="mt-4">
+                      <div
+                        className="pl-4 mt-4 flex items-center justify-start   cursor-pointer hover:bg-blue-800"
+                        onClick={() => handleNestedDropdown("reports")}
+                      >
+                        Reports
+                        {nestedDropdown === "reports" ? (
+                          <FaChevronUp size={14} className="ml-2" />
+                        ) : (
+                          <FaChevronDown size={14} className="ml-2" />
+                        )}
+                      </div>
+                      {nestedDropdown === "reports" && (
+                        <ul className="ml-4 mt-2 space-y-2 border-l-2 text-sm border-[#99DE07]">
+                          <li
+                            // onClick={() =>
+                            //   navigate(
+                            //     "/financial/details",
+                            //     setIsSidebarOpen(false)
+                            //   )
+                            // }
+                            className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                              isActiveLink("/financial/details")
+                                ? "bg-[#99DE07] text-black rounded pl-5"
+                                : ""
+                            }`}
+                          >
+                            Financial Details Information
+                          </li>
+
+                          <li
+                            onClick={() =>
+                              navigate(
+                                "/financial/docs",
+                                setIsSidebarOpen(false)
+                              )
+                            }
+                            className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                              isActiveLink("/financial/docs")
+                                ? "bg-[#99DE07] text-black rounded pl-5"
+                                : ""
+                            }`}
+                          >
+                            Financial Docs Information
+                          </li>
+                          <li
+                            onClick={() =>
+                              navigate(
+                                "/financial/legal",
+                                setIsSidebarOpen(false)
+                              )
+                            }
+                            className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
+                              isActiveLink("/financial/legal")
+                                ? "bg-[#99DE07] text-black rounded pl-5"
+                                : ""
+                            }`}
+                          >
+                            Financial Legal Information
+                          </li>
+                        </ul>
+                      )}
+                    </li> */}
                   </ul>
                 </li>
 

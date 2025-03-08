@@ -25,6 +25,13 @@ import ExperianCreditReport from "./components/Credit Reports/Experian";
 import ApiManage from "./pages/ApiManage";
 import Gst from "./components/Master Data/Gst";
 import Prefill from "./components/Prefill";
+import MobileAadhaarVerification from "./components/eKYC/MobileAadhaarVerification";
+import McaDetails from "./components/eKYC/McaDetails";
+import InstaFinancialBasic from "./components/Insta Finance Reports/InstaFinancialBasic";
+import InstaFinancialSummary from "./components/Insta Finance Reports/InstaFinancialSummary";
+import InstaFinancialDetails from "./components/Insta Finance Reports/InstaFinancialDetails";
+import InstaFinancialDocs from "./components/Insta Finance Reports/InstaFinancialDocs";
+import InstaFinancialLegals from "./components/Insta Finance Reports/InstaFinancialLegals";
 
 const App = () => {
   const { isAuthenticated, isPasswordResetInitiated } = useContext(AuthContext);
@@ -162,6 +169,18 @@ const AppRoutes = ({ isAuthenticated, isPasswordResetInitiated }) => {
         }
       />
       <Route
+        path="/ekyc/mobile-aadhaar-verification"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <MobileAadhaarVerification />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />{" "}
+      <Route
         path="/credit-report/equifax"
         element={
           isAuthenticated ? (
@@ -198,11 +217,84 @@ const AppRoutes = ({ isAuthenticated, isPasswordResetInitiated }) => {
         }
       />
       <Route
-        path="/masterdata/gst"
+        path="/gst/basic"
         element={
           isAuthenticated ? (
             <AuthenticatedLayout>
               <Gst />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/master/mca-details"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <McaDetails />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      {/* // finacial Routes */}
+      <Route
+        path="/financial/basic"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <InstaFinancialBasic />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/financial/summary"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <InstaFinancialSummary />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/financial/details"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <InstaFinancialDetails />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/financial/docs"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <InstaFinancialDocs />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/financial/legal"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <InstaFinancialLegals />
             </AuthenticatedLayout>
           ) : (
             <Navigate to="/login" />
