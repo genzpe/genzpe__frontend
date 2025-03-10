@@ -457,7 +457,7 @@ const AuthenticatedLayout = ({ children }) => {
                         </ul>
                       )}
                     </li>
-                    {/* <li className="mt-4">
+                    <li className="mt-4">
                       <div
                         className="pl-4 mt-4 flex items-center justify-start   cursor-pointer hover:bg-blue-800"
                         onClick={() => handleNestedDropdown("reports")}
@@ -471,13 +471,13 @@ const AuthenticatedLayout = ({ children }) => {
                       </div>
                       {nestedDropdown === "reports" && (
                         <ul className="ml-4 mt-2 space-y-2 border-l-2 text-sm border-[#99DE07]">
-                          <li
-                            // onClick={() =>
-                            //   navigate(
-                            //     "/financial/details",
-                            //     setIsSidebarOpen(false)
-                            //   )
-                            // }
+                          {/* <li
+                            onClick={() =>
+                              navigate(
+                                "/financial/details",
+                                setIsSidebarOpen(false)
+                              )
+                            }
                             className={`text-[14px] my-3 ml-1 pl-4 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
                               isActiveLink("/financial/details")
                                 ? "bg-[#99DE07] text-black rounded pl-5"
@@ -485,7 +485,7 @@ const AuthenticatedLayout = ({ children }) => {
                             }`}
                           >
                             Financial Details Information
-                          </li>
+                          </li> */}
 
                           <li
                             onClick={() =>
@@ -502,7 +502,7 @@ const AuthenticatedLayout = ({ children }) => {
                           >
                             Financial Docs Information
                           </li>
-                          <li
+                          {/* <li
                             onClick={() =>
                               navigate(
                                 "/financial/legal",
@@ -516,10 +516,10 @@ const AuthenticatedLayout = ({ children }) => {
                             }`}
                           >
                             Financial Legal Information
-                          </li>
+                          </li> */}
                         </ul>
                       )}
-                    </li> */}
+                    </li>
                   </ul>
                 </li>
 

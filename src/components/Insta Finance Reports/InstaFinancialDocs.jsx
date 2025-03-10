@@ -6,12 +6,15 @@ import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { AuthContext } from "../../context/AuthContext";
-import { Loader } from "../ui/Loader";
-
+import { ReportLoader } from "../ui/Loader";
+import { useNavigate } from "react-router-dom";
+import view_icon from "../../assets/view_icon.png";
+import refresh_button from "../../assets/refresh-button.png";
 const InstaFinancialDocs = () => {
   const [activeTab, setActiveTab] = useState("form");
   const [historyData, setHistoryData] = useState([]);
   const { loading, setLoading } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -83,9 +86,43 @@ const InstaFinancialDocs = () => {
       toast.error("Error fetching order status.");
     }
   };
+
+  const handleDownloadReport = async (cin_number, orderid, orderApiKey) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_APP_BACKEND_URL
+        }/financial/docs/download-report`,
+        {
+          CompanyCIN: cin_number,
+          orderid,
+          insta_api_key: orderApiKey,
+        },
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      if (!response.data.success) {
+        toast.error("Error while fetching report");
+      } else {
+        toast.success("Report fetched successfully");
+        navigate("/financial/docs/view-document-report", {
+          state: {
+            response: response.data.data,
+          },
+        });
+      }
+      toast.success("Report fetched successfully.");
+    } catch (error) {
+      console.error("API Error:", error);
+      toast.error("Internal server error");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
-      {loading && <Loader />}
+      {loading && <ReportLoader />}
 
       <div className="w-full flex flex-col items-center">
         {/* Tabs */}
@@ -93,7 +130,7 @@ const InstaFinancialDocs = () => {
           <button
             className={`w-1/2 p-3 text-center ${
               activeTab === "form"
-                ? "border-b-4 border-blue-500 font-bold"
+                ? "border-b-4 border-[rgb(5,13,45)] font-bold"
                 : "text-gray-500"
             }`}
             onClick={() => setActiveTab("form")}
@@ -103,7 +140,7 @@ const InstaFinancialDocs = () => {
           <button
             className={`w-1/2 p-3 text-center ${
               activeTab === "history"
-                ? "border-b-4 border-blue-500 font-bold"
+                ? "border-b-4  border-[rgb(5,13,45)] font-bold"
                 : "text-gray-500"
             }`}
             onClick={() => {
@@ -167,26 +204,6 @@ const InstaFinancialDocs = () => {
                   ) : null}
                 </div>
 
-                {/* Type Selection
-                <div className="w-full text-sm max-w-sm mb-4">
-                  <select
-                    id="type"
-                    name="type"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.type}
-                    className="w-full border rounded-md p-3 px-6 text-start text-base"
-                  >
-                    <option value="json">JSON</option>
-                    <option value="xml">XML</option>
-                  </select>
-                  {formik.touched.type && formik.errors.type ? (
-                    <div className="text-red-500 text-sm mt-2">
-                      {formik.errors.type}
-                    </div>
-                  ) : null}
-                </div> */}
-
                 {/* Submit Button */}
                 <Button
                   type="submit"
@@ -202,7 +219,7 @@ const InstaFinancialDocs = () => {
 
         {/* History Tab */}
         {activeTab === "history" && (
-          <Card className="w-full max-w-6xl px-6 py-0 border-none rounded-xl">
+          <Card className="w-full max-w-7xl px-6 py-0 border-none rounded-xl">
             <CardHeader className="flex justify-between items-center  pb-4">
               <CardTitle className="text-xl font-semibold text-gray-800">
                 📜 Submission History
@@ -221,7 +238,7 @@ const InstaFinancialDocs = () => {
                         <th className="p-4 text-left">Order Date</th>
                         <th className="p-4 text-left">Status</th>
                         <th className="p-4 text-left">Remark</th>
-                        <th className="p-4 text-left">Refresh</th>
+                        <th className="p-4 text-left">Check</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -247,14 +264,14 @@ const InstaFinancialDocs = () => {
                               <td className="p-4">
                                 <span
                                   className={`px-3 py-1 text-xs font-semibold border rounded-lg ${
-                                    order.OrderStatus === `Order Delivered`
+                                    order.OrderStatus === `Order Completed`
                                       ? "text-green-700 border-green-500"
                                       : order.OrderStatus === "Pending"
                                       ? "text-yellow-700 border-yellow-500"
                                       : "text-red-700 border-red-500"
                                   }`}
                                 >
-                                  {order.OrderStatus === "Order Delivered"
+                                  {order.OrderStatus === "Order Completed"
                                     ? "Success"
                                     : "Pending"}
                                 </span>
@@ -263,18 +280,41 @@ const InstaFinancialDocs = () => {
                                 {order.OrderRemark}
                               </td>
                               <td className="p-4">
-                                <button
-                                  onClick={() =>
-                                    handleStatusCheck(
-                                      company.CompanyCIN,
-                                      order.OrderID,
-                                      order.OrderInstaApiKey
-                                    )
-                                  }
-                                  className="p-2 border border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
-                                >
-                                  🔄
-                                </button>
+                                {order.OrderStatus === "Order Completed" ? (
+                                  <button
+                                    onClick={() =>
+                                      handleDownloadReport(
+                                        company.CompanyCIN,
+                                        order.OrderID,
+                                        order.OrderInstaApiKey
+                                      )
+                                    }
+                                    className="p-2  border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
+                                  >
+                                    <img
+                                      src={view_icon}
+                                      className="m-auto  h-[30px]"
+                                      alt="download"
+                                    />
+                                  </button>
+                                ) : (
+                                  <button
+                                    onClick={() =>
+                                      handleStatusCheck(
+                                        company.CompanyCIN,
+                                        order.OrderID,
+                                        order.OrderInstaApiKey
+                                      )
+                                    }
+                                    className="p-2 border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
+                                  >
+                                    <img
+                                      src={refresh_button}
+                                      className="m-auto h-[30px]"
+                                      alt="download"
+                                    />
+                                  </button>
+                                )}
                               </td>
                             </tr>
                           ))

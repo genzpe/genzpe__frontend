@@ -32,6 +32,8 @@ import InstaFinancialSummary from "./components/Insta Finance Reports/InstaFinan
 import InstaFinancialDetails from "./components/Insta Finance Reports/InstaFinancialDetails";
 import InstaFinancialDocs from "./components/Insta Finance Reports/InstaFinancialDocs";
 import InstaFinancialLegals from "./components/Insta Finance Reports/InstaFinancialLegals";
+import ViewDocsDocument from "./components/Insta Finance Reports/ViewDocsDocument";
+import ViewDetailedDoc from "./components/Insta Finance Reports/ViewDetailedDoc";
 
 const App = () => {
   const { isAuthenticated, isPasswordResetInitiated } = useContext(AuthContext);
@@ -295,6 +297,30 @@ const AppRoutes = ({ isAuthenticated, isPasswordResetInitiated }) => {
           isAuthenticated ? (
             <AuthenticatedLayout>
               <InstaFinancialLegals />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/financial/docs/view-document-report"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <ViewDocsDocument />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/financial/detailed/view-document-report"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <ViewDetailedDoc />
             </AuthenticatedLayout>
           ) : (
             <Navigate to="/login" />

@@ -46,7 +46,6 @@ const McaDetails = () => {
           }
         );
         setLoading(false);
-        debugger;
         if (response.data && response.data.success) {
           setVerificationStatus("Success");
 
@@ -101,7 +100,7 @@ const McaDetails = () => {
                   value={formik.values.entityId}
                   className="w-full border rounded-md p-3 px-6 text-start text-base"
                 />
-                {formik.touched.enityId && formik.errors.enityId ? (
+                {formik.touched.entityId && formik.errors.entityId ? (
                   <div className="text-red-500 text-sm mt-2">
                     {formik.errors.entityId}
                   </div>
