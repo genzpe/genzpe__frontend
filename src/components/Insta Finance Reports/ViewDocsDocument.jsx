@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import pdf_download_icon from "../../assets/pdfDownloadIcon.png";
 const ViewDocsDocument = () => {
@@ -14,15 +14,15 @@ const ViewDocsDocument = () => {
   const documents = Reportdata?.InstaDocs?.Document || [];
 
   return (
-    <div className="max-w-6xl mx-auto mt-6 bg-white rounded-lg">
-      <h2 className="text-2xl font-semibold text-center mb-4">
+    <div className="md:max-w-7xl max-w-3xl mx-auto mt-6 bg-white rounded-lg">
+      <h2 className="md:text-2xl text-xl font-semibold text-center mb-4">
         📄 InstaDocs Report
       </h2>
 
       {/* Metadata Section */}
       {Metadata ? (
-        <div className="bg-gray-100 p-4 rounded-lg mb-6">
-          <h3 className="text-lg font-semibold text-gray-700 mb-2">
+        <div className="bg-gray-100 p-4 rounded-lg mb-6 mx-auto">
+          <h3 className="text-lg  font-semibold text-gray-700 mb-2">
             📌 Report Metadata
           </h3>
           <p>
@@ -52,7 +52,7 @@ const ViewDocsDocument = () => {
       )}
 
       {/* Document Table */}
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen p-2">
         <div className="overflow-x-auto border-black">
           <table className="w-full border-collapse border-2 border-black text-center">
             <thead>

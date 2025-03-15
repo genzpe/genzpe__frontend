@@ -54,7 +54,7 @@ const Prefill = () => {
         );
         setVerificationStatus("Success");
         setShowDropdown(true);
-        console.log(response);
+        // console.log(response);
         setLoading(false);
         toast.success("Verification successful!");
       } catch (error) {

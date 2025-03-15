@@ -35,7 +35,7 @@ const InstaFinancialDocs = () => {
         );
 
         toast.success("Verification successful!");
-        console.log(response.data);
+        // console.log(response.data);
         setLoading(false);
         setActiveTab("history");
         fetchHistory();
@@ -59,6 +59,7 @@ const InstaFinancialDocs = () => {
       );
       setHistoryData(response.data.data);
       setLoading(false);
+      toast.success("History fetched successfully.");
     } catch (error) {
       setLoading(false);
       toast.error("Failed to fetch history.");
@@ -77,7 +78,7 @@ const InstaFinancialDocs = () => {
         },
         { withCredentials: true }
       );
-      console.log(response.data);
+      // console.log(response.data);
       fetchHistory();
       toast.success("Order status updated successfully.");
       setLoading(false);
@@ -101,18 +102,16 @@ const InstaFinancialDocs = () => {
         },
         { withCredentials: true }
       );
-      console.log(response.data);
-      if (!response.data.success) {
+      if (!response?.data?.success) {
         toast.error("Error while fetching report");
       } else {
         toast.success("Report fetched successfully");
         navigate("/financial/docs/view-document-report", {
           state: {
-            response: response.data.data,
+            response: response?.data?.data,
           },
         });
       }
-      toast.success("Report fetched successfully.");
     } catch (error) {
       console.error("API Error:", error);
       toast.error("Internal server error");
@@ -227,7 +226,7 @@ const InstaFinancialDocs = () => {
             </CardHeader>
 
             <CardContent className="">
-              {historyData.length > 0 ? (
+              {historyData?.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse border border-gray-300">
                     <thead>
@@ -242,8 +241,8 @@ const InstaFinancialDocs = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {historyData.map((company) =>
-                        company.Orders && company.Orders.length > 0 ? (
+                      {historyData?.map((company) =>
+                        company?.Orders && company?.Orders?.length > 0 ? (
                           company.Orders.map((order) => (
                             <tr
                               key={order.OrderID}
@@ -293,7 +292,7 @@ const InstaFinancialDocs = () => {
                                   >
                                     <img
                                       src={view_icon}
-                                      className="m-auto  h-[30px]"
+                                      className="m-auto  h-[32px]"
                                       alt="download"
                                     />
                                   </button>
@@ -310,7 +309,7 @@ const InstaFinancialDocs = () => {
                                   >
                                     <img
                                       src={refresh_button}
-                                      className="m-auto h-[30px]"
+                                      className="m-auto h-[32px]"
                                       alt="download"
                                     />
                                   </button>
@@ -319,12 +318,12 @@ const InstaFinancialDocs = () => {
                             </tr>
                           ))
                         ) : (
-                          <tr key={company.CompanyCIN}>
+                          <tr key={company?.CompanyCIN}>
                             <td
                               colSpan="7"
                               className="p-4 text-center text-gray-500"
                             >
-                              No orders found for CIN: {company.CompanyCIN}
+                              No orders found for CIN: {company?.CompanyCIN}
                             </td>
                           </tr>
                         )

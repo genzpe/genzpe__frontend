@@ -310,7 +310,7 @@ const AuthenticatedLayout = ({ children }) => {
                             : ""
                         }`}
                       >
-                        Prefill
+                        Personal KYC
                       </li>
                     </li>
                     <li>
@@ -356,7 +356,22 @@ const AuthenticatedLayout = ({ children }) => {
                             }`}
                           >
                             Experian
-                          </li>
+                          </li>{" "}
+                          {/* <li
+                            onClick={() =>
+                              navigate(
+                                "/credit-report/cibil",
+                                setIsSidebarOpen(false)
+                              )
+                            }
+                            className={`text-[14px] my-3 pl-4 ml-1 p-1 flex items-center justify-between   cursor-pointer hover:bg-blue-800 ${
+                              isActiveLink("/credit-report/cibil")
+                                ? "bg-[#99DE07] text-black rounded pl-5"
+                                : ""
+                            }`}
+                          >
+                            Cibil
+                          </li> */}
                         </ul>
                       )}
                     </li>
@@ -384,10 +399,10 @@ const AuthenticatedLayout = ({ children }) => {
                     >
                       Basic
                     </li>{" "}
-                    <li
-                      // onClick={() =>
-                      //   navigate("/financial/summary", setIsSidebarOpen(false))
-                      // }
+                    {/* <li
+                      onClick={() =>
+                        navigate("/financial/summary", setIsSidebarOpen(false))
+                      }
                       className={`text-[14px]  ml-1 pl-3 p-1 flex items-center justify-between cursor-pointer hover:bg-blue-800 ${
                         isActiveLink("/financial/summary")
                           ? "bg-[#99DE07] text-black rounded pl-5"
@@ -395,7 +410,7 @@ const AuthenticatedLayout = ({ children }) => {
                       }`}
                     >
                       Summary
-                    </li>
+                    </li> */}
                     <li>
                       <div
                         className="pl-4 mt-3 flex items-center justify-start   cursor-pointer hover:bg-blue-800"
@@ -524,7 +539,7 @@ const AuthenticatedLayout = ({ children }) => {
                 </li>
 
                 {/* Compliance */}
-                <li className="mt-4">
+                {/* <li className="mt-4">
                   <div className="flex items-center justify-between px-4 py-2 cursor-pointer hover:bg-blue-800 rounded-md">
                     <div className="flex items-center gap-2">
                       <FiGrid className="text-2xl" />
@@ -542,7 +557,7 @@ const AuthenticatedLayout = ({ children }) => {
                       CIC Reporting
                     </li>
                   </ul>
-                </li>
+                </li> */}
               </ul>
             </div>
           </aside>
