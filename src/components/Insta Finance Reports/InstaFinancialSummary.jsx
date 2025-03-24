@@ -7,10 +7,26 @@ import { AuthContext } from "../../context/AuthContext";
 import { Loader } from "../ui/Loader";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import * as yup from "yup";
+import { useNavigate } from "react-router-dom";
+
+const validationSchema = yup.object({
+  cin_number: yup
+    .string()
+    .matches(
+      /^[LU][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$/,
+      "Invalid CIN format"
+    )
+    .required("CIN number is required"),
+
+  insta_api_key: yup
+    .string()
+    .matches(/^[a-zA-Z0-9\\/+=]{50,}$/, "Invalid API Key format")
+    .required("API Key is required"),
+});
+
 const InstaFinancialSummary = () => {
-  const [verificationStatus, setVerificationStatus] = useState(null);
-  const [accountDetails, setAccountDetails] = useState(null);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
   const { loading, setLoading } = useContext(AuthContext);
 
   const formik = useFormik({
@@ -18,7 +34,7 @@ const InstaFinancialSummary = () => {
       cin_number: "",
       insta_api_key: "",
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
         setLoading(true);
@@ -32,14 +48,25 @@ const InstaFinancialSummary = () => {
             withCredentials: true,
           }
         );
-        console.log(response.data);
-        setSummaryData(response.data);
-        toast.success("Data fetched successfully!");
+        if (response.data?.success !== true) {
+          toast.error(response.data.message || "Verification failed!");
+        } else if (response.data.data?.Response?.Status === "error") {
+          toast.error(
+            response.data.data?.Response?.Type || "Verification failed!"
+          );
+        } else {
+          toast.success("Data fetched successfully!");
+          debugger;
+          navigate("/financial/summary/view-document-report", {
+            state: {
+              response: response?.data?.data?.result,
+            },
+          });
+        }
       } catch (error) {
         toast.error(
           error.response?.data?.message || "Error fetching financial summary."
         );
-        setSummaryData(null);
       } finally {
         setLoading(false);
       }
@@ -90,7 +117,7 @@ const InstaFinancialSummary = () => {
                   id="insta_api_key"
                   name="insta_api_key"
                   type="text"
-                  placeholder="Enter Insta API Key"
+                  placeholder="Enter Secure Key"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.insta_api_key}
@@ -112,6 +139,50 @@ const InstaFinancialSummary = () => {
                 Submit
               </Button>
             </form>
+
+            {/* {verificationStatus && (
+              <div className="absolute bottom-0 w-full bg-green-100 rounded-md flex flex-col items-start">
+                <div
+                  className={`text-base font-semibold border-y-2 border-gray-300 flex px-4 py-2 items-center justify-between w-full`}
+                >
+                  <div className="flex items-center text-base w-fit">
+                    Response <FaArrowRightLong className="mx-2" />
+                    <span
+                      className={`${
+                        verificationStatus === "Success"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }`}
+                    >
+                      {verificationStatus}
+                    </span>
+                  </div>
+                  <FaChevronDown
+                    onClick={() => {
+                      setShowDropdown(!showDropdown);
+                    }}
+                    className={`ml-2 transition-transform cursor-pointer ${
+                      showDropdown ? "rotate-180" : ""
+                    }`}
+                  />
+                </div>
+
+                {showDropdown &&
+                  verificationStatus === "Success" &&
+                  summaryData && (
+                    <div className="bg-green-100 mt-4 text-left text-gray-800 space-y-2 px-4 py-1 w-full max-w-full h-[calc(100vh-20rem)] overflow-y-auto rounded-md shadow-md">
+                      {Object.entries(summaryData).map(([key, value]) => (
+                        <div key={key}>
+                          <strong>
+                            {key.replace(/([A-Z])/g, " $1").trim()}:
+                          </strong>{" "}
+                          {value || "N/A"}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+              </div>
+            )} */}
           </CardContent>
         </Card>
       </div>

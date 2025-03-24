@@ -34,6 +34,9 @@ import InstaFinancialDocs from "./components/Insta Finance Reports/InstaFinancia
 import InstaFinancialLegals from "./components/Insta Finance Reports/InstaFinancialLegals";
 import ViewDocsDocument from "./components/Insta Finance Reports/ViewDocsDocument";
 import ViewDetailedDoc from "./components/Insta Finance Reports/ViewDetailedDoc";
+import ViewLegalDoc from "./components/Insta Finance Reports/ViewLegalDoc";
+import CibilReport from "./components/Credit Reports/CibilReport";
+import ViewSummaryDoc from "./components/Insta Finance Reports/ViewSummaryDoc";
 
 const App = () => {
   const { isAuthenticated, isPasswordResetInitiated } = useContext(AuthContext);
@@ -268,6 +271,18 @@ const AppRoutes = ({ isAuthenticated, isPasswordResetInitiated }) => {
         }
       />
       <Route
+        path="/financial/summary/view-document-report"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <ViewSummaryDoc />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
         path="/financial/details"
         element={
           isAuthenticated ? (
@@ -321,6 +336,30 @@ const AppRoutes = ({ isAuthenticated, isPasswordResetInitiated }) => {
           isAuthenticated ? (
             <AuthenticatedLayout>
               <ViewDetailedDoc />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/financial/legal/view-document-report"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <ViewLegalDoc />
+            </AuthenticatedLayout>
+          ) : (
+            <Navigate to="/login" />
+          )
+        }
+      />
+      <Route
+        path="/credit-report/cibil"
+        element={
+          isAuthenticated ? (
+            <AuthenticatedLayout>
+              <CibilReport />
             </AuthenticatedLayout>
           ) : (
             <Navigate to="/login" />

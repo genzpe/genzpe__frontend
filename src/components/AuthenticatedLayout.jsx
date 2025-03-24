@@ -283,7 +283,7 @@ const AuthenticatedLayout = ({ children }) => {
                           >
                             ITR Compliance
                           </li>
-                          <li
+                          {/* <li
                             // onClick={() =>
                             //   navigate(
                             //     "/ekyc/mobile-aadhaar-verification",
@@ -297,7 +297,7 @@ const AuthenticatedLayout = ({ children }) => {
                             }`}
                           >
                             Mobile Aadhaar Verification
-                          </li>
+                          </li> */}
                         </ul>
                       )}
                       <li
@@ -399,7 +399,7 @@ const AuthenticatedLayout = ({ children }) => {
                     >
                       Basic
                     </li>{" "}
-                    {/* <li
+                    <li
                       onClick={() =>
                         navigate("/financial/summary", setIsSidebarOpen(false))
                       }
@@ -410,7 +410,7 @@ const AuthenticatedLayout = ({ children }) => {
                       }`}
                     >
                       Summary
-                    </li> */}
+                    </li>
                     <li>
                       <div
                         className="pl-4 mt-3 flex items-center justify-start   cursor-pointer hover:bg-blue-800"
@@ -486,7 +486,7 @@ const AuthenticatedLayout = ({ children }) => {
                       </div>
                       {nestedDropdown === "reports" && (
                         <ul className="ml-4 mt-2 space-y-2 border-l-2 text-sm border-[#99DE07]">
-                          {/* <li
+                          <li
                             onClick={() =>
                               navigate(
                                 "/financial/details",
@@ -500,7 +500,7 @@ const AuthenticatedLayout = ({ children }) => {
                             }`}
                           >
                             Financial Details Information
-                          </li> */}
+                          </li>
 
                           <li
                             onClick={() =>
@@ -517,7 +517,7 @@ const AuthenticatedLayout = ({ children }) => {
                           >
                             Financial Docs Information
                           </li>
-                          {/* <li
+                          <li
                             onClick={() =>
                               navigate(
                                 "/financial/legal",
@@ -531,7 +531,7 @@ const AuthenticatedLayout = ({ children }) => {
                             }`}
                           >
                             Financial Legal Information
-                          </li> */}
+                          </li>
                         </ul>
                       )}
                     </li>

@@ -125,7 +125,7 @@ const InstaFinancialBasic = () => {
                   id="insta_api_key"
                   name="insta_api_key"
                   type="text"
-                  placeholder="Enter Insta API Key"
+                  placeholder="Enter Secure Key"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.insta_api_key}

@@ -59,6 +59,79 @@ const ViewDetailedDoc = () => {
     CapitalExpenditureCoverageRatio: "Capital Expenditure Coverage Ratio",
   };
 
+  const cashFlowMappings = {
+    ProfitBeforeExtraordinaryItemsAndTax: "Profit Before Tax",
+    AdjustmentsForFinanceCosts: "Finance Costs",
+    AdjustmentsForDepreciationAndAmortisationExpense:
+      "Depreciation & Amortization",
+    AdjustmentsForDividendIncome: "Dividend Income",
+    OtherAdjustmentsForWhichCashEffectsAreInvestingOrFinancingCashFlow:
+      "Other Cash Adjustments",
+    OtherAdjustmentsToReconcileProfitLoss: "Other Adjustments to Profit/Loss",
+    TotalAdjustmentsToProfitLoss: "Total Adjustments to Profit/Loss",
+    AdjustmentsForDecreaseIncreaseInInventories: "Inventory Adjustments",
+    AdjustmentsForDecreaseIncreaseInTradeReceivables:
+      "Trade Receivables Adjustments",
+    AdjustmentsForIncreaseDecreaseInTradePayables: "Trade Payables Adjustments",
+    AdjustmentsForProvisions: "Provisions Adjustments",
+    IncomeTaxesPaidRefundClassifiedAsOperatingActivities: "Income Tax Paid",
+    NetCashFlowsFromUsedInOperatingActivities: "Net Cash from Operations",
+    CashFlowsUsedInObtainingControlOfSubsidiariesOrOtherBusinessesClassifiedAsInvestingActivities:
+      "Subsidiary Acquisition",
+    ProceedsFromSalesOfTangibleAssetsClassifiedAsInvestingActivities:
+      "Asset Sales",
+    PurchaseOfTangibleAssetsClassifiedAsInvestingActivities: "Asset Purchases",
+    DividendsReceivedClassifiedAsInvestingActivities: "Dividends Received",
+    InterestReceivedClassifiedAsInvestingActivities: "Interest Received",
+    ProceedsFromGovernmentGrantsClassifiedAsInvestingActivities:
+      "Government Grants",
+    NetCashFlowsFromUsedInInvestingActivities: "Net Cash from Investing",
+    ProceedsFromBorrowingsClassifiedAsFinancingActivities: "Borrowings",
+    RepaymentsOfBorrowingsClassifiedAsFinancingActivities:
+      "Borrowing Repayments",
+    DividendsPaidClassifiedAsFinancingActivities: "Dividends Paid",
+    InterestPaidClassifiedAsFinancingActivities: "Interest Paid",
+    OtherInflowsOutflowsOfCashClassifiedAsFinancingActivities:
+      "Other Financing Cash Flow",
+    NetCashFlowsFromUsedInFinancingActivities: "Net Cash from Financing",
+    NetIncreaseDecreaseInCashAndCashEquivalentsBeforeEffectOfExchangeRateChanges:
+      "Net Cash Before Exchange Rate Effect",
+    NetIncreaseDecreaseInCashAndCashEquivalents: "Net Cash Change",
+    CashAndCashEquivalentsCashFlowStatement: "Cash Equivalents",
+    TotalCashAndCashEquivalents: "Total Cash Equivalents",
+    OtherAdjustmentsForNoncashItems: "Other Non-Cash Adjustments",
+    OtherInflowsOutflowsOfCashClassifiedAsInvestingActivities:
+      "Other Investing Cash Flow",
+    OtherCashPaymentsToAcquireEquityOrDebtInstrumentsOfOtherEntitiesClassifiedAsInvestingActivities:
+      "Equity/Debt Acquisition",
+  };
+
+  const loanAdvancesMappings = {
+    LongAllLoanAndAdvanceSecured: "Secured Loans (Long Term)",
+    LongCapitalAdvancesLoanAndAdvanceUnsecured: "Capital Advances (Unsecured)",
+    LongSecurityDepositsLoanAndAdvanceUnsecured:
+      "Security Deposits (Unsecured)",
+    LongRelatedPartyLoanAndAdvanceUnsecured: "Related Party Loans (Unsecured)",
+    LongOtherLoanAndAdvanceUnsecured: "Other Loans (Unsecured)",
+    LongRelatedPartyLoanAndAdvanceProvisionUnsecured:
+      "Provision for Related Party Loans (Unsecured)",
+    LongOtherLoanAndAdvanceProvisionUnsecured:
+      "Provision for Other Loans (Unsecured)",
+    LongAllLoanAndAdvanceUnsecured: "Total Unsecured Loans",
+    LongCapitalAdvancesLoanAndAdvanceDoubtful: "Capital Advances (Doubtful)",
+    LongSecurityDepositsLoanAndAdvanceDoubtful: "Security Deposits (Doubtful)",
+    LongRelatedPartyLoanAndAdvanceDoubtful: "Related Party Loans (Doubtful)",
+    LongOtherLoanAndAdvanceDoubtful: "Other Loans (Doubtful)",
+    LongRelatedPartyLoanAndAdvanceProvisionDoubtful:
+      "Provision for Related Party Loans (Doubtful)",
+    LongOtherLoanAndAdvanceProvisionDoubtful:
+      "Provision for Other Loans (Doubtful)",
+    LongAllLoanAndAdvanceDoubtful: "Total Doubtful Loans",
+    LongTermLoansAndAdvances: "Total Long-Term Loans & Advances",
+    ShortLoanAndAdvance: "Short-Term Loans & Advances",
+    TotalLoanAndAdvance: "Total Loans & Advances",
+  };
+
   const extractYearsAndCategories = (data) => {
     if (!data) return { years: [], categories: [] };
 
@@ -173,21 +246,17 @@ const ViewDetailedDoc = () => {
 
   const shareholderNames = Array.from(allShareholders);
   return (
-    <div className="md:max-w-6xl max-w-4xl mx-auto mt-6 bg-white rounded-lg p-4">
+    <div className="md:max-w-[77rem] max-w-4xl mx-auto mt-6 bg-white rounded-lg p-4">
       <h2 className="md:text-2xl text-xl font-semibold text-center mb-10">
         📄 InstaDetailed Report
       </h2>
 
       {CompanyMasterSummary && (
         <div className=" bg-white ">
-          <h2 className="text-2xl font-bold text-blue-950 mb-4">
-            Company Highlights
-          </h2>
-
           {/* 1.1 Basic Information */}
           <div className="my-4">
             <h3 className="text-xl font-semibold text-blue-950 mb-4">
-              Basic Information
+              Company Basic Information
             </h3>
             <table className="w-full border border-gray-300 ">
               <tbody>
@@ -249,7 +318,7 @@ const ViewDetailedDoc = () => {
           {/* 1.2 KYC Information */}
           <div className="my-4">
             <h3 className="text-xl font-semibold text-blue-950 mb-4">
-              KYC Information
+              Company KYC Information
             </h3>
             <table className="w-full border border-gray-300">
               <tbody>
@@ -473,20 +542,24 @@ const ViewDetailedDoc = () => {
             <table className="w-full border-collapse border border-gray-300 ">
               <thead>
                 <tr className="bg-gray-300 font-bold">
-                  <th className="border border-gray-300 p-2 font-bold">Year</th>
-                  <th className="border border-gray-300 p-2 font-bold">
+                  <th className="border border-gray-300 p-2 font-bold text-start">
+                    Year
+                  </th>
+                  <th className="border border-gray-300 p-2 font-bold text-start">
                     Agency
                   </th>
-                  <th className="border border-gray-300 p-2 font-bold">
+                  <th className="border border-gray-300 p-2 font-bold text-start">
                     Assigned
                   </th>
-                  <th className="border border-gray-300 p-2 font-bold">
+                  <th className="border border-gray-300 p-2 font-bold text-start">
                     Instrument
                   </th>
-                  <th className="border border-gray-300 p-2 font-bold">
+                  <th className="border border-gray-300 p-2 font-bold text-start">
                     Amount
                   </th>
-                  <th className="border border-gray-300 p-2 font-bold">Date</th>
+                  <th className="border border-gray-300 p-2 font-bold text-start">
+                    Date
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -647,26 +720,28 @@ const ViewDetailedDoc = () => {
               </tr>
             </thead>
             <tbody>
-              {cashFlowCategories.map((category, index) => (
-                <tr
-                  key={category}
-                  className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
-                >
-                  <td className="border border-gray-300 p-2 font-semibold">
-                    {category}
-                  </td>
-                  {cashFlowYears.map((year) => (
-                    <td
-                      key={`${category}-${year}`}
-                      className="border border-gray-300 p-2 text-right"
-                    >
-                      {CashFlowStatement.CashFlowStatementIndirectMethod[
-                        year
-                      ]?.[category] ?? "N/A"}
+              {Object.entries(cashFlowMappings).map(
+                ([originalKey, displayKey], index) => (
+                  <tr
+                    key={originalKey}
+                    className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
+                  >
+                    <td className="border border-gray-300 p-2 font-semibold">
+                      {displayKey}
                     </td>
-                  ))}
-                </tr>
-              ))}
+                    {cashFlowYears.map((year) => (
+                      <td
+                        key={`${originalKey}-${year}`}
+                        className="border border-gray-300 p-2 text-right"
+                      >
+                        {CashFlowStatement.CashFlowStatementIndirectMethod[
+                          year
+                        ]?.[originalKey] ?? "N/A"}
+                      </td>
+                    ))}
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         </div>
@@ -1006,21 +1081,21 @@ const ViewDetailedDoc = () => {
               </tr>
             </thead>
             <tbody>
-              {/** Dynamically Extract All Keys Present in FY2024 **/}
-              {Object.keys(LoansAndAdvances.FY2024 || {}).map(
-                (key, rowIndex) => (
+              {Object.entries(loanAdvancesMappings).map(
+                ([originalKey, displayKey], rowIndex) => (
                   <tr
-                    key={key}
+                    key={originalKey}
                     className={rowIndex % 2 === 0 ? "bg-white" : "bg-gray-100"}
                   >
-                    <td className="border border-gray-300 p-2">{key}</td>
+                    <td className="border border-gray-300 p-2">{displayKey}</td>
                     {Object.keys(LoansAndAdvances)
                       .filter((year) => year.startsWith("FY"))
                       .map((year) => {
-                        const value = LoansAndAdvances[year]?.[key] || "-"; // Ensure proper extraction
+                        const value =
+                          LoansAndAdvances[year]?.[originalKey] || "-";
                         return (
                           <td
-                            key={`${key}-${year}`}
+                            key={`${originalKey}-${year}`}
                             className="border border-gray-300 p-2 text-right"
                           >
                             {value !== "-"

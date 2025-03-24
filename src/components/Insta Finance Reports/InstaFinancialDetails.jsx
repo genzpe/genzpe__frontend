@@ -6,8 +6,10 @@ import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { AuthContext } from "../../context/AuthContext";
-import { Loader } from "../ui/Loader";
+import { ReportLoader } from "../ui/Loader";
 import { useNavigate } from "react-router-dom";
+import view_icon from "../../assets/view_icon.png";
+import refresh_button from "../../assets/refresh-button.png";
 
 const InstaFinancialDetails = () => {
   const [activeTab, setActiveTab] = useState("form");
@@ -34,7 +36,6 @@ const InstaFinancialDetails = () => {
         );
 
         toast.success("Verification successful!");
-        console.log(response.data);
         setLoading(false);
         setActiveTab("history");
         fetchHistory();
@@ -56,6 +57,7 @@ const InstaFinancialDetails = () => {
         `${import.meta.env.VITE_APP_BACKEND_URL}/financial/detailed/history`,
         { withCredentials: true }
       );
+      toast.success("History fetched successfully.");
       setHistoryData(response.data.data);
       setLoading(false);
     } catch (error) {
@@ -76,7 +78,7 @@ const InstaFinancialDetails = () => {
         },
         { withCredentials: true }
       );
-      console.log(response.data);
+      // console.log(response.data);
       fetchHistory();
       toast.success("Order status updated successfully.");
       setLoading(false);
@@ -100,19 +102,17 @@ const InstaFinancialDetails = () => {
         },
         { withCredentials: true }
       );
-      console.log(response.data);
-      debugger;
+
       if (!response.data.success) {
         toast.error("Error while fetching report");
       } else {
         toast.success("Report fetched successfully");
         navigate("/financial/detailed/view-document-report", {
           state: {
-            response: response.data.data,
+            response: response?.data?.data,
           },
         });
       }
-      toast.success("Report fetched successfully.");
     } catch (error) {
       console.error("API Error:", error);
       toast.error("Internal server error");
@@ -123,7 +123,7 @@ const InstaFinancialDetails = () => {
 
   return (
     <>
-      {loading && <Loader />}
+      {loading && <ReportLoader />}
 
       <div className="w-full flex flex-col items-center">
         {/* Tabs */}
@@ -131,7 +131,7 @@ const InstaFinancialDetails = () => {
           <button
             className={`w-1/2 p-3 text-center ${
               activeTab === "form"
-                ? "border-b-4 border-blue-500 font-bold"
+                ? "border-b-4 border-[rgb(5,13,45)] font-bold"
                 : "text-gray-500"
             }`}
             onClick={() => setActiveTab("form")}
@@ -141,7 +141,7 @@ const InstaFinancialDetails = () => {
           <button
             className={`w-1/2 p-3 text-center ${
               activeTab === "history"
-                ? "border-b-4 border-blue-500 font-bold"
+                ? "border-b-4 border-[rgb(5,13,45)] font-bold"
                 : "text-gray-500"
             }`}
             onClick={() => {
@@ -191,7 +191,7 @@ const InstaFinancialDetails = () => {
                     id="insta_api_key"
                     name="insta_api_key"
                     type="text"
-                    placeholder="Enter Insta API Key"
+                    placeholder="Enter Secure Key"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.insta_api_key}
@@ -240,7 +240,7 @@ const InstaFinancialDetails = () => {
 
         {/* History Tab */}
         {activeTab === "history" && (
-          <Card className="w-full max-w-6xl px-6 py-0 border-none rounded-xl">
+          <Card className="w-full max-w-7xl px-6 py-0 border-none rounded-xl">
             <CardHeader className="flex justify-between items-center  pb-4">
               <CardTitle className="text-xl font-semibold text-gray-800">
                 📜 Submission History
@@ -248,7 +248,7 @@ const InstaFinancialDetails = () => {
             </CardHeader>
 
             <CardContent className="">
-              {historyData.length > 0 ? (
+              {historyData?.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse border border-gray-300">
                     <thead>
@@ -265,72 +265,86 @@ const InstaFinancialDetails = () => {
                     <tbody>
                       {historyData.map((company) =>
                         company.Orders && company.Orders.length > 0 ? (
-                          company.Orders.map((order) => (
-                            <tr
-                              key={order.OrderID}
-                              className="border-b border-violet-300"
-                            >
-                              <td className="p-4 font-medium text-blue-600">
-                                {company.CompanyCIN}
-                              </td>
-                              <td className="p-4 text-gray-700">
-                                {order.OrderID}
-                              </td>
-                              <td className="p-4 font-semibold text-indigo-700">
-                                {order.Product}
-                              </td>
-                              <td className="p-4 text-gray-600">
-                                {new Date(order.OrderedOn).toLocaleString()}
-                              </td>
-                              <td className="p-4">
-                                <span
-                                  className={`px-3 py-1 text-xs font-semibold border rounded-lg ${
-                                    order.OrderStatus === `Order Completed`
-                                      ? "text-green-700 border-green-500"
-                                      : order.OrderStatus === "Pending"
-                                      ? "text-yellow-700 border-yellow-500"
-                                      : "text-red-700 border-red-500"
-                                  }`}
-                                >
-                                  {order.OrderStatus === "Order Completed"
-                                    ? "Success"
-                                    : "Pending"}
-                                </span>
-                              </td>
-                              <td className="p-4 text-gray-700">
-                                {order.OrderRemark}
-                              </td>
-                              <td className="p-4">
-                                {order.OrderStatus === "Order Completed" ? (
-                                  <button
-                                    onClick={() =>
-                                      handleDownloadReport(
-                                        company.CompanyCIN,
-                                        order.OrderID,
-                                        order.OrderInstaApiKey
-                                      )
-                                    }
-                                    className="p-2 border border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
+                          company.Orders.map((order) => {
+                            const extractedOrderID =
+                              order.OrderID.split("-")[0]; // Extract OrderID before '-'
+                            return (
+                              <tr
+                                key={extractedOrderID}
+                                className="border-b border-violet-300"
+                              >
+                                <td className="p-4 font-medium text-blue-600">
+                                  {company.CompanyCIN}
+                                </td>
+                                <td className="p-4 text-gray-700">
+                                  {extractedOrderID}
+                                </td>
+                                <td className="p-4 font-semibold text-indigo-700">
+                                  {order.Product}
+                                </td>
+                                <td className="p-4 text-gray-600">
+                                  {new Date(order.OrderedOn).toLocaleString()}
+                                </td>
+                                <td className="p-4">
+                                  <span
+                                    className={`px-3 py-1 text-xs font-semibold border rounded-lg ${
+                                      order.OrderStatus === `Order Completed`
+                                        ? "text-green-700 border-green-500"
+                                        : order.OrderStatus === "Pending"
+                                        ? "text-yellow-700 border-yellow-500"
+                                        : "text-red-700 border-red-500"
+                                    }`}
                                   >
-                                    📥 View
-                                  </button>
-                                ) : (
-                                  <button
-                                    onClick={() =>
-                                      handleStatusCheck(
-                                        company.CompanyCIN,
-                                        order.OrderID,
-                                        order.OrderInstaApiKey
-                                      )
-                                    }
-                                    className="p-2 border border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
-                                  >
-                                    🔄
-                                  </button>
-                                )}
-                              </td>
-                            </tr>
-                          ))
+                                    {order.OrderStatus === "Order Completed"
+                                      ? "Success"
+                                      : order.OrderStatus === "Order Cancelled"
+                                      ? "Order Cancelled"
+                                      : "Pending"}
+                                  </span>
+                                </td>
+                                <td className="p-4 text-gray-700">
+                                  {order.OrderRemark}
+                                </td>
+                                <td className="p-4">
+                                  {order.OrderStatus === "Order Completed" ? (
+                                    <button
+                                      onClick={() =>
+                                        handleDownloadReport(
+                                          company.CompanyCIN,
+                                          extractedOrderID,
+                                          order.OrderInstaApiKey
+                                        )
+                                      }
+                                      className="p-2  border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
+                                    >
+                                      <img
+                                        src={view_icon}
+                                        className="m-auto  h-[30px]"
+                                        alt="download"
+                                      />
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={() =>
+                                        handleStatusCheck(
+                                          company.CompanyCIN,
+                                          extractedOrderID,
+                                          order.OrderInstaApiKey
+                                        )
+                                      }
+                                      className="p-2 border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
+                                    >
+                                      <img
+                                        src={refresh_button}
+                                        className="m-auto h-[30px]"
+                                        alt="download"
+                                      />
+                                    </button>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })
                         ) : (
                           <tr key={company.CompanyCIN}>
                             <td

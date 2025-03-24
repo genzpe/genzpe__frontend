@@ -6,12 +6,15 @@ import { Card, CardHeader, CardTitle, CardContent } from "../ui/card";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { AuthContext } from "../../context/AuthContext";
-import { Loader } from "../ui/Loader";
-
+import { ReportLoader } from "../ui/Loader";
+import { useNavigate } from "react-router-dom";
+import view_icon from "../../assets/view_icon.png";
+import refresh_button from "../../assets/refresh-button.png";
 const InstaFinancialLegals = () => {
   const [activeTab, setActiveTab] = useState("form");
   const [historyData, setHistoryData] = useState([]);
   const { loading, setLoading } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -32,7 +35,7 @@ const InstaFinancialLegals = () => {
         );
 
         toast.success("Verification successful!");
-        console.log(response.data);
+        // console.log(response.data);
         setLoading(false);
         setActiveTab("history");
         fetchHistory();
@@ -54,7 +57,8 @@ const InstaFinancialLegals = () => {
         `${import.meta.env.VITE_APP_BACKEND_URL}/financial/legal/history`,
         { withCredentials: true }
       );
-      setHistoryData(response.data.data);
+      setHistoryData(response?.data?.data);
+      toast.success("History fetched successfully.");
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -74,7 +78,6 @@ const InstaFinancialLegals = () => {
         },
         { withCredentials: true }
       );
-      console.log(response.data);
       fetchHistory();
       toast.success("Order status updated successfully.");
       setLoading(false);
@@ -83,9 +86,41 @@ const InstaFinancialLegals = () => {
       toast.error("Error fetching order status.");
     }
   };
+
+  const handleDownloadReport = async (cin_number, orderid, orderApiKey) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${
+          import.meta.env.VITE_APP_BACKEND_URL
+        }/financial/legal/download-report`,
+        {
+          companyCIN: cin_number,
+          orderid,
+          insta_api_key: orderApiKey,
+        },
+        { withCredentials: true }
+      );
+      if (!response?.data?.success) {
+        toast.error("Error while fetching report");
+      } else {
+        toast.success("Report fetched successfully");
+        navigate("/financial/legal/view-document-report", {
+          state: {
+            response: response?.data?.data,
+          },
+        });
+      }
+    } catch (error) {
+      console.error("API Error:", error);
+      toast.error("Internal server error");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
-      {loading && <Loader />}
+      {loading && <ReportLoader />}
 
       <div className="w-full flex flex-col items-center">
         {/* Tabs */}
@@ -93,7 +128,7 @@ const InstaFinancialLegals = () => {
           <button
             className={`w-1/2 p-3 text-center ${
               activeTab === "form"
-                ? "border-b-4 border-blue-500 font-bold"
+                ? "border-b-4 border-blue-950 font-bold"
                 : "text-gray-500"
             }`}
             onClick={() => setActiveTab("form")}
@@ -103,7 +138,7 @@ const InstaFinancialLegals = () => {
           <button
             className={`w-1/2 p-3 text-center ${
               activeTab === "history"
-                ? "border-b-4 border-blue-500 font-bold"
+                ? "border-b-4 border-blue-950 font-bold"
                 : "text-gray-500"
             }`}
             onClick={() => {
@@ -153,7 +188,7 @@ const InstaFinancialLegals = () => {
                     id="insta_api_key"
                     name="insta_api_key"
                     type="text"
-                    placeholder="Enter Insta API Key"
+                    placeholder="Enter Secure Key"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.insta_api_key}
@@ -166,26 +201,6 @@ const InstaFinancialLegals = () => {
                     </div>
                   ) : null}
                 </div>
-
-                {/* Type Selection
-                <div className="w-full text-sm max-w-sm mb-4">
-                  <select
-                    id="type"
-                    name="type"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.type}
-                    className="w-full border rounded-md p-3 px-6 text-start text-base"
-                  >
-                    <option value="json">JSON</option>
-                    <option value="xml">XML</option>
-                  </select>
-                  {formik.touched.type && formik.errors.type ? (
-                    <div className="text-red-500 text-sm mt-2">
-                      {formik.errors.type}
-                    </div>
-                  ) : null}
-                </div> */}
 
                 {/* Submit Button */}
                 <Button
@@ -202,7 +217,7 @@ const InstaFinancialLegals = () => {
 
         {/* History Tab */}
         {activeTab === "history" && (
-          <Card className="w-full max-w-6xl px-6 py-0 border-none rounded-xl">
+          <Card className="w-full max-w-7xl px-6 py-0 border-none rounded-xl">
             <CardHeader className="flex justify-between items-center  pb-4">
               <CardTitle className="text-xl font-semibold text-gray-800">
                 📜 Submission History
@@ -210,7 +225,7 @@ const InstaFinancialLegals = () => {
             </CardHeader>
 
             <CardContent className="">
-              {historyData.length > 0 ? (
+              {historyData?.length > 0 ? (
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse border border-gray-300">
                     <thead>
@@ -226,58 +241,87 @@ const InstaFinancialLegals = () => {
                     </thead>
                     <tbody>
                       {historyData.map((company) =>
-                        company.Orders && company.Orders.length > 0 ? (
-                          company.Orders.map((order) => (
-                            <tr
-                              key={order.OrderID}
-                              className="border-b border-violet-300"
-                            >
-                              <td className="p-4 font-medium text-blue-600">
-                                {company.CompanyCIN}
-                              </td>
-                              <td className="p-4 text-gray-700">
-                                {order.OrderID}
-                              </td>
-                              <td className="p-4 font-semibold text-indigo-700">
-                                {order.Product}
-                              </td>
-                              <td className="p-4 text-gray-600">
-                                {new Date(order.OrderedOn).toLocaleString()}
-                              </td>
-                              <td className="p-4">
-                                <span
-                                  className={`px-3 py-1 text-xs font-semibold border rounded-lg ${
-                                    order.OrderStatus === `Order Delivered`
-                                      ? "text-green-700 border-green-500"
-                                      : order.OrderStatus === "Pending"
-                                      ? "text-yellow-700 border-yellow-500"
-                                      : "text-red-700 border-red-500"
-                                  }`}
-                                >
-                                  {order.OrderStatus === "Order Delivered"
-                                    ? "Success"
-                                    : "Pending"}
-                                </span>
-                              </td>
-                              <td className="p-4 text-gray-700">
-                                {order.OrderRemark}
-                              </td>
-                              <td className="p-4">
-                                <button
-                                  onClick={() =>
-                                    handleStatusCheck(
-                                      company.CompanyCIN,
-                                      order.OrderID,
-                                      order.OrderInstaApiKey
-                                    )
-                                  }
-                                  className="p-2 border border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
-                                >
-                                  🔄
-                                </button>
-                              </td>
-                            </tr>
-                          ))
+                        company?.Orders && company?.Orders?.length > 0 ? (
+                          company?.Orders.map((order) => {
+                            const extractedOrderID =
+                              order.OrderID.split("-")[0]; // Extract OrderID before '-'
+                            return (
+                              <tr
+                                key={extractedOrderID}
+                                className="border-b border-violet-300"
+                              >
+                                <td className="p-4 font-medium text-blue-600">
+                                  {company.CompanyCIN}
+                                </td>
+                                <td className="p-4 text-gray-700">
+                                  {extractedOrderID}
+                                </td>
+                                <td className="p-4 font-semibold text-indigo-700">
+                                  {order.Product}
+                                </td>
+                                <td className="p-4 text-gray-600">
+                                  {new Date(order.OrderedOn).toLocaleString()}
+                                </td>
+                                <td className="p-4">
+                                  <span
+                                    className={`px-3 py-1 text-xs font-semibold border rounded-lg ${
+                                      order.OrderStatus === `Order Completed`
+                                        ? "text-green-700 border-green-500"
+                                        : order.OrderStatus === "Pending"
+                                        ? "text-yellow-700 border-yellow-500"
+                                        : "text-red-700 border-red-500"
+                                    }`}
+                                  >
+                                    {order.OrderStatus === "Order Completed"
+                                      ? "Success"
+                                      : order.OrderStatus === "Order Cancelled"
+                                      ? "Order Cancelled"
+                                      : "Pending"}
+                                  </span>
+                                </td>
+                                <td className="p-4 text-gray-700">
+                                  {order.OrderRemark}
+                                </td>
+                                <td className="p-4">
+                                  {order.OrderStatus === "Order Completed" ? (
+                                    <button
+                                      onClick={() =>
+                                        handleDownloadReport(
+                                          company.CompanyCIN,
+                                          extractedOrderID,
+                                          order.OrderInstaApiKey
+                                        )
+                                      }
+                                      className="p-2  border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
+                                    >
+                                      <img
+                                        src={view_icon}
+                                        className="m-auto  h-[30px]"
+                                        alt="download"
+                                      />
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={() =>
+                                        handleStatusCheck(
+                                          company.CompanyCIN,
+                                          extractedOrderID,
+                                          order.OrderInstaApiKey
+                                        )
+                                      }
+                                      className="p-2 border border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
+                                    >
+                                      <img
+                                        src={refresh_button}
+                                        className="m-auto h-[30px]"
+                                        alt="download"
+                                      />
+                                    </button>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })
                         ) : (
                           <tr key={company.CompanyCIN}>
                             <td

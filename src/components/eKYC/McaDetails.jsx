@@ -81,7 +81,7 @@ const McaDetails = () => {
         <Card className="h-fit w-full max-w-lg px-6 py-8 md:max-w-xl lg:max-w-2xl md:px-10 border-none">
           <CardHeader>
             <CardTitle className="text-center mt-2 tracking-wide text-lg text-gray-800">
-              Enter CIN
+              Enter CIN Number
             </CardTitle>
           </CardHeader>
           <CardContent className="w-full flex flex-col items-center">
@@ -94,7 +94,7 @@ const McaDetails = () => {
                   id="entityId"
                   name="entityId"
                   type="text"
-                  placeholder="Enter CIN"
+                  placeholder="Enter CIN Number"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
                   value={formik.values.entityId}

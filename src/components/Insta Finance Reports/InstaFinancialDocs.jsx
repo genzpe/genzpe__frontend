@@ -189,7 +189,7 @@ const InstaFinancialDocs = () => {
                     id="insta_api_key"
                     name="insta_api_key"
                     type="text"
-                    placeholder="Enter Insta API Key"
+                    placeholder="Enter Secure Key"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.insta_api_key}
@@ -243,80 +243,88 @@ const InstaFinancialDocs = () => {
                     <tbody>
                       {historyData?.map((company) =>
                         company?.Orders && company?.Orders?.length > 0 ? (
-                          company.Orders.map((order) => (
-                            <tr
-                              key={order.OrderID}
-                              className="border-b border-violet-300"
-                            >
-                              <td className="p-4 font-medium text-blue-600">
-                                {company.CompanyCIN}
-                              </td>
-                              <td className="p-4 text-gray-700">
-                                {order.OrderID}
-                              </td>
-                              <td className="p-4 font-semibold text-indigo-700">
-                                {order.Product}
-                              </td>
-                              <td className="p-4 text-gray-600">
-                                {new Date(order.OrderedOn).toLocaleString()}
-                              </td>
-                              <td className="p-4">
-                                <span
-                                  className={`px-3 py-1 text-xs font-semibold border rounded-lg ${
-                                    order.OrderStatus === `Order Completed`
-                                      ? "text-green-700 border-green-500"
-                                      : order.OrderStatus === "Pending"
-                                      ? "text-yellow-700 border-yellow-500"
-                                      : "text-red-700 border-red-500"
-                                  }`}
-                                >
-                                  {order.OrderStatus === "Order Completed"
-                                    ? "Success"
-                                    : "Pending"}
-                                </span>
-                              </td>
-                              <td className="p-4 text-gray-700">
-                                {order.OrderRemark}
-                              </td>
-                              <td className="p-4">
-                                {order.OrderStatus === "Order Completed" ? (
-                                  <button
-                                    onClick={() =>
-                                      handleDownloadReport(
-                                        company.CompanyCIN,
-                                        order.OrderID,
-                                        order.OrderInstaApiKey
-                                      )
-                                    }
-                                    className="p-2  border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
+                          company.Orders.map((order) => {
+                            const extractedOrderID =
+                              order.OrderID.split("-")[0]; // Extract OrderID before '-'
+
+                            return (
+                              <tr
+                                key={extractedOrderID}
+                                className="border-b border-violet-300"
+                              >
+                                <td className="p-4 font-medium text-blue-600">
+                                  {company.CompanyCIN}
+                                </td>
+                                <td className="p-4 text-gray-700">
+                                  {extractedOrderID}{" "}
+                                  {/* Render extracted OrderID */}
+                                </td>
+                                <td className="p-4 font-semibold text-indigo-700">
+                                  {order.Product}
+                                </td>
+                                <td className="p-4 text-gray-600">
+                                  {new Date(order.OrderedOn).toLocaleString()}
+                                </td>
+                                <td className="p-4">
+                                  <span
+                                    className={`px-3 py-1 text-xs font-semibold border rounded-lg ${
+                                      order.OrderStatus === `Order Completed`
+                                        ? "text-green-700 border-green-500"
+                                        : order.OrderStatus === "Pending"
+                                        ? "text-yellow-700 border-yellow-500"
+                                        : "text-red-700 border-red-500"
+                                    }`}
                                   >
-                                    <img
-                                      src={view_icon}
-                                      className="m-auto  h-[32px]"
-                                      alt="download"
-                                    />
-                                  </button>
-                                ) : (
-                                  <button
-                                    onClick={() =>
-                                      handleStatusCheck(
-                                        company.CompanyCIN,
-                                        order.OrderID,
-                                        order.OrderInstaApiKey
-                                      )
-                                    }
-                                    className="p-2 border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
-                                  >
-                                    <img
-                                      src={refresh_button}
-                                      className="m-auto h-[32px]"
-                                      alt="download"
-                                    />
-                                  </button>
-                                )}
-                              </td>
-                            </tr>
-                          ))
+                                    {order.OrderStatus === "Order Completed"
+                                      ? "Success"
+                                      : order.OrderStatus === "Order Cancelled"
+                                      ? "Order Cancelled"
+                                      : "Pending"}
+                                  </span>
+                                </td>
+                                <td className="p-4 text-gray-700">
+                                  {order.OrderRemark}
+                                </td>
+                                <td className="p-4">
+                                  {order.OrderStatus === "Order Completed" ? (
+                                    <button
+                                      onClick={() =>
+                                        handleDownloadReport(
+                                          company.CompanyCIN,
+                                          extractedOrderID,
+                                          order.OrderInstaApiKey
+                                        )
+                                      }
+                                      className="p-2 border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
+                                    >
+                                      <img
+                                        src={view_icon}
+                                        className="m-auto h-[32px]"
+                                        alt="download"
+                                      />
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={() =>
+                                        handleStatusCheck(
+                                          company.CompanyCIN,
+                                          extractedOrderID,
+                                          order.OrderInstaApiKey
+                                        )
+                                      }
+                                      className="p-2 border-gray-400 rounded-lg hover:bg-gray-100 transition-all duration-300"
+                                    >
+                                      <img
+                                        src={refresh_button}
+                                        className="m-auto h-[32px]"
+                                        alt="download"
+                                      />
+                                    </button>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })
                         ) : (
                           <tr key={company?.CompanyCIN}>
                             <td
