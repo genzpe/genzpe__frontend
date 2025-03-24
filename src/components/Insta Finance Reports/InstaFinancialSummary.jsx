@@ -49,14 +49,14 @@ const InstaFinancialSummary = () => {
           }
         );
         if (response.data?.success !== true) {
-          toast.error(response.data.message || "Verification failed!");
-        } else if (response.data.data?.Response?.Status === "error") {
+          toast.error(response.data?.message || "Verification failed!");
+        } else if (response.data?.data?.result?.Response?.Status === "error") {
           toast.error(
-            response.data.data?.Response?.Type || "Verification failed!"
+            response.data?.data?.result?.Response?.Type ||
+              "Your API Key is Invalid or expired!"
           );
         } else {
           toast.success("Data fetched successfully!");
-          debugger;
           navigate("/financial/summary/view-document-report", {
             state: {
               response: response?.data?.data?.result,

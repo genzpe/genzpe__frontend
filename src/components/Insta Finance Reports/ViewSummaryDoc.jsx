@@ -39,7 +39,6 @@ const ViewSummaryDoc = () => {
       olderRatings.push(rating);
     }
   });
-  debugger;
   const financialData = FinancialsSummary?.FinancialsYearWise;
 
   const IncomeExpenseChart = () => {

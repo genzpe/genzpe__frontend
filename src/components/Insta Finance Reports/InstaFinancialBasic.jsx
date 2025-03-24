@@ -58,7 +58,8 @@ const InstaFinancialBasic = () => {
           showDropdown(false);
         } else if (response.data.data?.Response?.Status === "error") {
           toast.error(
-            response.data.data?.Response?.Type || "Verification failed!"
+            response.data.data?.Response?.Type ||
+              "Your API Key is Invalid or expired!"
           );
           setVerificationStatus("Failed");
           setBasicDetails(null);
