@@ -357,7 +357,6 @@ const AuthenticatedLayout = ({ children }) => {
                           >
                             Experian
                           </li>{" "}
-                          4{" "}
                           <li
                             onClick={() =>
                               navigate(
