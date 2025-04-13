@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { FaChevronDown } from "react-icons/fa";
 import { AuthContext } from "../../context/AuthContext";
-import { Loader1 } from "../ui/Loader";
+import { Loader1, ReportLoader } from "../ui/Loader";
 // import { formatCreditReport, handlePrint } from "@/lib/formatCreditReport";
 import { FaArrowRightLong } from "react-icons/fa6";
 import JSONPretty from "react-json-pretty";
@@ -145,7 +145,7 @@ const EquifaxCreditReport = () => {
 
   return (
     <>
-      {loading && <Loader1 />}
+      {loading && <ReportLoader />}
 
       <div className="relative w-full   flex justify-center border-none">
         {" "}

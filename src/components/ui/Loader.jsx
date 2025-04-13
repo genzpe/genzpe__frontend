@@ -11,7 +11,7 @@ export const Loader = () => {
 export const ReportLoader = () => {
   return (
     <div
-      className="top-16 sm:left-64 fixed inset-0 bg-gray-500 bg-opacity-60 flex justify-center items-center z-50"
+      className="top-[70px] sm:left-64 fixed inset-0 bg-gray-500 bg-opacity-60 flex justify-center items-center z-50"
       style={{ overflow: "hidden" }} // Disable scrolling while loading
     >
       <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>

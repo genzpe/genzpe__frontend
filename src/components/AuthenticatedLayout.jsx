@@ -357,7 +357,8 @@ const AuthenticatedLayout = ({ children }) => {
                           >
                             Experian
                           </li>{" "}
-                          {/* <li
+                          4{" "}
+                          <li
                             onClick={() =>
                               navigate(
                                 "/credit-report/cibil",
@@ -371,7 +372,7 @@ const AuthenticatedLayout = ({ children }) => {
                             }`}
                           >
                             Cibil
-                          </li> */}
+                          </li>
                         </ul>
                       )}
                     </li>
